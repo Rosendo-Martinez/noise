@@ -9,6 +9,7 @@ public:
 
     Window();
     bool init(int width, int height);
+    void loop();
 
     GLFWwindow* window = nullptr;
 };
