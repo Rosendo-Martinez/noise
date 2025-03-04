@@ -63,3 +63,9 @@ What should window do?
     - Should it also handle input? Not handle, but make it eaisly
       accesible?
     - error_callback for glfw?
+
+The window is opening and staying open! Now what? Need to start rendering shit. Lets first start in 2D.
+First, need to import the shaders. The geometric renders will need them! First, lets render a square. I guess
+orthogrphic will be fine first. THE PLAN: set up the geomtric renderes, then I can start working on the noise shit (The good shit).
+
+How to the shader? NLG, I just want to copy & paste it from some other project that has a Shader class.
