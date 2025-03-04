@@ -1,9 +1,15 @@
 #include "HelloWorld.h"
+#include "window.h"
 
 
 int main() 
 {
-    hello();
+    Window window;
+    if (!window.init(640, 480))
+    {
+        return 0;
+    }
 
+    hello();
     return 0;
 }

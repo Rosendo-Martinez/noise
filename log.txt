@@ -58,3 +58,8 @@ To Do:
 - Set up shaders
 - VBOs / geometry renders (cuboids, planes, lines, text, squares)
 
+
+What should window do?
+    - Should it also handle input? Not handle, but make it eaisly
+      accesible?
+    - error_callback for glfw?

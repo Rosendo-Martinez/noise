@@ -1,7 +1,8 @@
 src := $(wildcard ./src/*)
 obj := $(patsubst ./src/%.cpp, ./bin/%.o, $(src))
 
-include := -I./include
+link := -lglfw -ldl
+include := -I./include -I./glad/include
 program := main.exe
 
 
@@ -9,11 +10,14 @@ program := main.exe
 
 all : ./bin/$(program)
 
-./bin/$(program) : $(obj)
-	g++ -o ./bin/$(program) $(obj)
+./bin/$(program) : $(obj) ./bin/glad.o
+	g++ -o ./bin/$(program) $(obj) ./bin/glad.o $(link)
 
 ./bin/%.o : ./src/%.cpp
 	g++ -c $^ -o $@ $(include)
+
+./bin/glad.o : ./glad/src/glad.c
+	g++ -c $^ -o $@ -I./glad/include
 
 
 # Utility commands --------------------------------------
@@ -25,7 +29,7 @@ print :
 	echo ${obj}
 
 clean :
-	rm -f ./bin/*
+	rm -f $(obj) ./bin/$(program)
 
 run : all
 	./bin/$(program)
