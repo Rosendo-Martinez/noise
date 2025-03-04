@@ -1,4 +1,3 @@
-#include "HelloWorld.h"
 #include "window.h"
 
 
@@ -9,7 +8,6 @@ int main()
     {
         return 0;
     }
-
-    hello();
+    
     return 0;
 }
