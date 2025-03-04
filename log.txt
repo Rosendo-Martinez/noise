@@ -1,0 +1,60 @@
+What the fuck am I doing?
+
+What am I making? A noise visualizer. I will visualize my noise, and also perlin noise.
+I also want to see if I was right about perlin noise justing being my noise, but with a 
+tilting table (i.e visualize the table).
+
+I guess program will need to be 3D and 2D. 2D for 1D and 2D noise, and 3D for 3D noise.
+
+Ok, I'm starting to think this won't be some quick 1-3 day project, maybe, but it seems like 
+it will take, it shouldn't take more then 2 weeks. I doubt it should even take more then 1 week.
+
+Tasks - Expected Time
+--------------------------
+Setting up OpenGL program - 1-3 days
+Adding noise visualization - 1-3 days
+
+Total: 2-6 days (~1 week)
+
+Thats if I work hard! Should I drop everything else? IDK. 
+
+Should I start from scratch, or pig back off some other project I've made, or other peoples code?
+I could. Making it from scratch shouldn't be too hard, and it would build my skills up too. I think 
+I should, and want to, build it from scratch. So it will use OpenGL, GLFW, and GLM (main dependencies).
+
+What else am I working on right now?
+- Going through 6837 lectures
+- 3200 A2 
+
+What do I get out of doing this?
+- Implement and practice noise
+    - Will be able to build minecraft clone
+- Practice programming skills
+    - Build a program from scratch, 100% on my own.
+- Cool unique project to show off! 
+
+HELL YEAH!
+
+-----------------------------------------------------------------------------------------------------------------
+
+What am I building?
+- 2D visualization: 
+    - 1D perlin noise, value noise, octave noise
+- 3D visualization:
+    - 2D perlin, value, and octave
+    - 3D perlin, value, and octave
+- Text that says what going on
+- Users can input to change what they see
+
+What it won't have
+- a movable camera (some default)
+
+Alright, lets start? Yes. Where? What? 
+
+To Do:
+- Hello world
+- Window opening
+- Drawing hello triangle
+- Set up shaders
+- VBOs / geometry renders (cuboids, planes, lines, text, squares)
+
