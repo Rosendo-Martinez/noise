@@ -69,3 +69,5 @@ First, need to import the shaders. The geometric renders will need them! First, 
 orthogrphic will be fine first. THE PLAN: set up the geomtric renderes, then I can start working on the noise shit (The good shit).
 
 How to the shader? NLG, I just want to copy & paste it from some other project that has a Shader class.
+
+Shit is going good! 
