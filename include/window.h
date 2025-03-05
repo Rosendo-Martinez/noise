@@ -9,7 +9,11 @@ public:
 
     Window();
     bool init(int width, int height);
-    void loop();
+
+    bool shouldClose();
+    void terminate();
+    void swapBuffers();
+    void pollEvents();
 
     GLFWwindow* window = nullptr;
 };

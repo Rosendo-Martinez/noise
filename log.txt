@@ -70,4 +70,22 @@ orthogrphic will be fine first. THE PLAN: set up the geomtric renderes, then I c
 
 How to the shader? NLG, I just want to copy & paste it from some other project that has a Shader class.
 
-Shit is going good! 
+Shit is going good! Shader class is tested! I'm going on break soon. Should I? Yes, a quick 10m break. NO YT, music sure, but no videos.
+What to do next? Render a square.
+
+
+Where am I going? I think I should aim for visualizing the 1D noise first.First, off. I could just copy and past in line, and square from AI 
+project like I copied the Shader class. Should I? How about I add copy over Square, refactor and clean it up. Then I draw a square. To see 
+everything is working (shaders, and square). 
+
+Fuck squares!
+
+LINE: could refactor out model matrix.
+
+Refactoring Ideas:
+    - refactor out model matrix in LineRender
+    - Move "main loop" out of window? Move it to main, just have globales?
+
+Going on 5min break very soon. What? Keep working on this shit. This refactoring is much better. The window is juts one compoennt of this
+prograrm. Their is no one compoenent that should contrl the others, execapt main which is best fit for now wher ethe compoents gather 
+to work togehters! KEep at it. Quick piss & tea break!

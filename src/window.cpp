@@ -1,8 +1,6 @@
 #include "window.h"
 #include <iostream>
 
-const float CLEAR_COLOR[4] = {0.6, 0.0, 0.1, 0.0};
-
 
 void error_callback(int error, const char* description)
 {
@@ -48,17 +46,25 @@ bool Window::init(int width, int height)
 }
 
 
-void Window::loop()
+void Window::pollEvents()
 {
-    glClearColor(CLEAR_COLOR[0], CLEAR_COLOR[1], CLEAR_COLOR[2], CLEAR_COLOR[3]);
+    glfwPollEvents();
+}
 
-    while (!glfwWindowShouldClose(this->window))
-    {
-        // Input
-        glfwPollEvents();
 
-        // Render
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(this->window);
-    }
+bool Window::shouldClose()
+{
+    return glfwWindowShouldClose(this->window);
+}
+
+
+void Window::swapBuffers()
+{
+    glfwSwapBuffers(this->window);
+}
+
+
+void Window::terminate()
+{
+    glfwTerminate();
 }
