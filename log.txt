@@ -92,3 +92,108 @@ prograrm. Their is no one compoenent that should contrl the others, execapt main
 to work togehters! KEep at it. Quick piss & tea break!
 
 No clue what to do next! 
+
+Steps:
+    implement noise
+    then just sample points from it
+    use sampled points to create lines
+    draw lines to screen
+
+All noise will need to be 'seededed'
+
+Noise
+    construct(seed)
+    sample(x)
+
+ValueNoise1D
+    construct(seed)
+    sample(x)
+
+I think I have to go to dinner now. I'll go eat, then come back to work straight away. Still needed to finish this crank (1h left), and do 1 final one!
+
+Its 841pm. I have 1D value noise. Feelt like giving up once I saw that gourges cubic graph, LOOK AT THIS GRAPH! Fuck! Now what? 
+Well, IDK. I just WELL DESERVED BREAK TIME! 
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+I have no clue what I'm doing. Lets just try what I think is best. 
+
+I need to fix the noise shit.
+Options:
+    - Just return a list that contains sample points over some interval w/ some dx.
+      With this, user can just call it once, and no redo of caluclations. I think this is best.
+    - Or, I could have user sample over inteverals of size 1 (2 - 1 = 1, 3 - 2 = 1). I would be recauluting the same thing over and over,
+      but would be better approach over what I have now.
+    - Stick with what I have now, which is very infeffecient, so many reduntandt calculations constantly doing the same cacullation over and over again.
+I think the choice is clear.
+
+FUCK!!! This shit is hard, and its some random math shit, not the actual noise shit, its about sampling. IDK. I think I figured osmething out after 1.5 hours, I guess
+thats good, though. I found a solution I'm somewhat happy with even if it was a fucking pain and tediuos. Anywyas, I think more about it after this 5min break.
+
+V(-1)---------------------------------------------------------------------------------------------
+interval
+dx = ...  
+samples_per_sub_interval = ? [sub_start, sub_end), sample start of interval but not end (else duplicates!)
+
+
+list
+
+for (i = start; i <= end; i++)
+  calculate the cubic
+  x = i
+  for (i = 0; i < samples_per_interval; i++)
+    x += dx * i
+    sample(x)
+    add to sample poitn to list 
+
+  if (i == end)
+    x += dx
+    sample last point
+Will miss very last sample point with this algo!
+
+
+Hope to god it sampled the correct number of points.
+Could also assert.
+
+V1----------------------------------
+list sample(start, end, count)
+  length = end - start
+  dx = (length) / (count - 1)
+
+  list[]
+
+  x_frac = 0
+  for (int i = start; i <= end; i++)
+    cubic = createCubic(i)
+    
+    while (x_frac < 1) # [i,i+1) # Don't sample end!
+      sample_point = cubic(x_frac)
+      list.add(sample_point)
+      x_frac += dx
+
+V2----------------------------------------
+list sample(start, end, count)
+  length = end - start
+  dx = (length) / (count - 1)
+
+  list[count]
+
+  i = 0;
+  x_int = start;
+  x_dec = 0;
+  while (i < count)
+    cubic = createCubic(x_int)
+
+    while (x_dec < 1) # [x_int, x_int+1)
+      sample_point = sample(cubic, x_dec)
+      x_dec += dx;
+      list[i] = sample_point;
+      i++;
+    
+    x_dec = x_dec - 1.0f # left over fraction
+    x_int++
+
+WHAT A PAIN this shit was, not sure it was even worth it. I WAS OPTIMIZING IT SO THAT we only deal with floats that aren't too big.
+With tihs algo the floats will always be ~1 or <1! WHY? I barely know about htis floating point shit, ok I do have some experince.

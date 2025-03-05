@@ -4,6 +4,7 @@ obj := $(patsubst ./src/%.cpp, ./bin/%.o, $(src))
 link := -lglfw -ldl
 include := -I./include -I./glad/include
 program := main.exe
+flags := -g
 
 
 # Build commands -------------------------------------
@@ -11,10 +12,10 @@ program := main.exe
 all : ./bin/$(program)
 
 ./bin/$(program) : $(obj) ./bin/glad.o
-	g++ -o ./bin/$(program) $(obj) ./bin/glad.o $(link)
+	g++ $(flags) -o ./bin/$(program) $(obj) ./bin/glad.o $(link)
 
 ./bin/%.o : ./src/%.cpp
-	g++ -c $^ -o $@ $(include)
+	g++ $(flags) -c $^ -o $@ $(include)
 
 ./bin/glad.o : ./glad/src/glad.c
 	g++ -c $^ -o $@ -I./glad/include

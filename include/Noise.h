@@ -1,0 +1,12 @@
+#include <vector>
+#include <glm/vec2.hpp>
+
+
+class Value_Noise_1D
+{
+public:
+    Value_Noise_1D();
+    
+    float sample(float x);
+    std::vector<glm::vec2> sample(int start, int end, int count);
+};
