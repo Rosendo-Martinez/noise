@@ -9,18 +9,17 @@ Window* window = nullptr;
 LineRenderer* line = nullptr;
 CameraOrthographic* cam = nullptr;
 
+bool init();
 void render();
 void input();
 
+
 int main() 
 {
-    window = new Window();
-    if (!window->init(700, 700))
+    if (!init())
     {
         return 0;
     }
-    line = new LineRenderer();
-    cam = new CameraOrthographic(0, 20, 0, 1.5, -1.0, 1.0);
 
     while (!window->shouldClose())
     {
@@ -29,8 +28,25 @@ int main()
     }
 
     window->terminate();
-    // Free other shit?
     return 0;
+}
+
+
+// Function defintions -----------------------------------------------------------------------
+
+
+bool init()
+{
+    window = new Window();
+    if (!window->init(700, 700))
+    {
+        return false;
+    }
+
+    line = new LineRenderer();
+    cam = new CameraOrthographic(0, 20, 0, 1.5, -1.0, 1.0);
+
+    return true;
 }
 
 
@@ -49,6 +65,7 @@ void render()
 
     window->swapBuffers();
 }
+
 
 void input()
 {

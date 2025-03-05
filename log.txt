@@ -85,6 +85,7 @@ LINE: could refactor out model matrix.
 Refactoring Ideas:
     - refactor out model matrix in LineRender
     - Move "main loop" out of window? Move it to main, just have globales?
+    - "FREE" shit? in main?
 
 Going on 5min break very soon. What? Keep working on this shit. This refactoring is much better. The window is juts one compoennt of this
 prograrm. Their is no one compoenent that should contrl the others, execapt main which is best fit for now wher ethe compoents gather 
