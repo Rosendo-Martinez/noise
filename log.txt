@@ -90,3 +90,5 @@ Refactoring Ideas:
 Going on 5min break very soon. What? Keep working on this shit. This refactoring is much better. The window is juts one compoennt of this
 prograrm. Their is no one compoenent that should contrl the others, execapt main which is best fit for now wher ethe compoents gather 
 to work togehters! KEep at it. Quick piss & tea break!
+
+No clue what to do next! 
