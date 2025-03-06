@@ -66,7 +66,7 @@ void render()
     //     int x_last = 20;
     //     int count = 200;
     //     line->setProjection(cam->get());
-    //     std::vector<glm::vec2> noise_samples = Value_Noise_1D::sample(x_first, x_last, count);
+    //     std::vector<glm::vec2> noise_samples = Noise1D::sample(x_first, x_last, count);
     //     for (int i = 0; i < noise_samples.size() - 1; i++)
     //     {
     //         assert(i < noise_samples.size());
@@ -96,9 +96,16 @@ void render()
         {
             line->draw(
                 LINE_COLOR,
-                glm::vec3(x, Value_Noise_1D::sample_perlin(x), 0.0f),
-                glm::vec3(x + dx, Value_Noise_1D::sample_perlin(x + dx), 0.0f),
+                glm::vec3(x, Noise1D::sample_perlin_octave(x), 0.0f),
+                glm::vec3(x + dx, Noise1D::sample_perlin_octave(x + dx), 0.0f),
                 LINE_WIDTH + 1.25
+            );
+
+            line->draw(
+                glm::vec3(0.0, 1.0, 0.0),
+                glm::vec3(x, Noise1D::sample_perlin(x), 0.0f),
+                glm::vec3(x + dx, Noise1D::sample_perlin(x + dx), 0.0f),
+                LINE_WIDTH + 0.5f
             );
 
             x = x + dx;

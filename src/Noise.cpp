@@ -64,7 +64,30 @@ Cubic get_cubic(int x_int_part)
 // Value Noise 1D ----------------------------------------------------------------------------------------
 
 
-float Value_Noise_1D::sample(float x)
+float octave(float x, bool isValue)
+{
+    int octaves = 6;
+    int frequency = 2;
+    float amplitude = 0.5f;
+
+    float total = 0;
+    for (int i = 0; i < octaves; i++)
+    {
+        if (isValue)
+        {
+            total += Noise1D::sample_value(x * pow(frequency, i)) * pow(amplitude, i);
+        }
+        else // perlin
+        {
+            total += Noise1D::sample_perlin(x * pow(frequency, i)) * pow(amplitude, i);
+        }
+    }
+
+    return total;
+}
+
+
+float Noise1D::sample_value(float x)
 {
     int x_int;
     float x_dec;
@@ -75,7 +98,7 @@ float Value_Noise_1D::sample(float x)
 
 
 // Samples noise over interval [start, end] a count times.
-std::vector<glm::vec2> Value_Noise_1D::sample(int start, int end, int count)
+std::vector<glm::vec2> Noise1D::sample(int start, int end, int count)
 {
     // WARNING: this shit is too complicated, maybe do something about it?
     // WHY: the point at which we sample can be thought of as a int and a fractional part
@@ -111,23 +134,13 @@ std::vector<glm::vec2> Value_Noise_1D::sample(int start, int end, int count)
 }
 
 
-float Value_Noise_1D::sample_octave(float x)
+float Noise1D::sample_value_octave(float x)
 {
-    int octaves = 6;
-    int frequency = 2;
-    float amplitude = 0.5f;
-
-    float total = 0;
-    for (int i = 0; i < octaves; i++)
-    {
-        total += sample(x * pow(frequency, i)) * pow(amplitude, i);
-    }
-
-    return total;
+    return octave(x, true);
 }
 
 
-float Value_Noise_1D::sample_perlin(float x) // TODO: perlin is really gradient not value, fix this.
+float Noise1D::sample_perlin(float x)
 {
     int x_int;
     float x_dec;
@@ -141,4 +154,10 @@ float Value_Noise_1D::sample_perlin(float x) // TODO: perlin is really gradient 
 
     float amplitude = 2.0f;
     return Hermite_Interpolate(y_left, y_right, x_dec) * amplitude;
+}
+
+
+float Noise1D::sample_perlin_octave(float x)
+{
+    return octave(x, false);
 }
