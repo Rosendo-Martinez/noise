@@ -61,26 +61,26 @@ void render()
     float LINE_WIDTH = 1.0f;
 
     // Rendering: with list 
-    {
-        int x_first = 0;
-        int x_last = 20;
-        int count = 200;
-        line->setProjection(cam->get());
-        std::vector<glm::vec2> noise_samples = Value_Noise_1D::sample(x_first, x_last, count);
-        for (int i = 0; i < noise_samples.size() - 1; i++)
-        {
-            assert(i < noise_samples.size());
-            assert(i + 1 < noise_samples.size());
+    // {
+    //     int x_first = 0;
+    //     int x_last = 20;
+    //     int count = 200;
+    //     line->setProjection(cam->get());
+    //     std::vector<glm::vec2> noise_samples = Value_Noise_1D::sample(x_first, x_last, count);
+    //     for (int i = 0; i < noise_samples.size() - 1; i++)
+    //     {
+    //         assert(i < noise_samples.size());
+    //         assert(i + 1 < noise_samples.size());
 
 
-            line->draw(
-                LINE_COLOR, 
-                glm::vec3(noise_samples[i], 0.0f), 
-                glm::vec3(noise_samples[i+1], 0.0f), 
-                LINE_WIDTH
-            );
-        }
-    }
+    //         line->draw(
+    //             LINE_COLOR, 
+    //             glm::vec3(noise_samples[i], 0.0f), 
+    //             glm::vec3(noise_samples[i+1], 0.0f), 
+    //             LINE_WIDTH
+    //         );
+    //     }
+    // }
 
     // Rendering: w/o list
     {
@@ -96,8 +96,8 @@ void render()
         {
             line->draw(
                 LINE_COLOR,
-                glm::vec3(x, Value_Noise_1D::sample_octave(x), 0.0f),
-                glm::vec3(x + dx, Value_Noise_1D::sample_octave(x + dx), 0.0f),
+                glm::vec3(x, Value_Noise_1D::sample_perlin(x), 0.0f),
+                glm::vec3(x + dx, Value_Noise_1D::sample_perlin(x + dx), 0.0f),
                 LINE_WIDTH + 1.25
             );
 

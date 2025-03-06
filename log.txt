@@ -218,3 +218,18 @@ octave(x)
   for i = 0 to octaves:
     total = sample(x * 2^(i)) * (perstiance ^ (octaves))
 
+Thats octave, and value noise (1D) done. Maybe do 2D noise, but keep it 2D for now? Draw it on a quads?
+
+Next is 1D perlin.
+
+sample_perlin(x)
+
+  g0 = ? # left gradient
+  g1 = ? # right gradient
+
+  r0 = g0 * x_fract
+  r1 = g1 * (1 - x_fract)
+
+  return hermite_interpolation(r0, r1, x_fract)
+
+So, I'll need random gradient vectors. In this case its just a 

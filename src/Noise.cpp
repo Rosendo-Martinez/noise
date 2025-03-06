@@ -25,6 +25,12 @@ void split(float x, int& x_int, float& x_dec)
 }
 
 
+float Hermite_Interpolate(float l, float r, float dx)
+{
+    return (2.0f * pow(dx,3) - 3.0f * pow(dx,2) + 1.0f) * l + (-2.0f * pow(dx,3) + 3.0f * pow(dx,2)) * r;
+}
+
+
 float Cubic_Interpolate(const Cubic& cubic, float x)
 {
     // CREDIT: Hugo Elias
@@ -118,4 +124,21 @@ float Value_Noise_1D::sample_octave(float x)
     }
 
     return total;
+}
+
+
+float Value_Noise_1D::sample_perlin(float x) // TODO: perlin is really gradient not value, fix this.
+{
+    int x_int;
+    float x_dec;
+    split(x, x_int, x_dec);
+
+    float slope_left = random_float(x_int);
+    float slope_right = random_float(x_int + 1);
+
+    float y_left = slope_left * x_dec;
+    float y_right = slope_right * (x_dec - 1.0f);
+
+    float amplitude = 2.0f;
+    return Hermite_Interpolate(y_left, y_right, x_dec) * amplitude;
 }
