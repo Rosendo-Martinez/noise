@@ -15,6 +15,16 @@ struct Cubic
 // Helper functions ---------------------------------------------------------------------------------------
 
 
+void split(float x, int& x_int, float& x_dec)
+{
+    double x_int_double;
+    double x_dec_double = modf(x, &x_int_double);
+    
+    x_int = (int) x_int_double;
+    x_dec = (float) x_dec_double;
+}
+
+
 float Cubic_Interpolate(const Cubic& cubic, float x)
 {
     // CREDIT: Hugo Elias
@@ -53,17 +63,11 @@ Value_Noise_1D::Value_Noise_1D() {}
 
 float Value_Noise_1D::sample(float x)
 {
-    // PROBLEMS: x_fraction reduces accuracy as it gets bigger,
-    //           waste of resources for user to iterate dx, by dx
-    //           calling this function at each dx,
-    // TODO: fix this in-efficient shit.
-    // SOLUTION: retrun sample points on the interval [floor(x), floor(x) + 1]
+    int x_int;
+    float x_dec;
+    split(x, x_int, x_dec);
 
-    double x_intpart_double;
-    double x_fraction = modf(x, &x_intpart_double);
-    int x_intpart_int = (int) x_intpart_double;
-
-    return Cubic_Interpolate(get_cubic(x_intpart_int), x_fraction);
+    return Cubic_Interpolate(get_cubic(x_int), x_dec);
 }
 
 
