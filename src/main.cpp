@@ -59,6 +59,7 @@ void render()
 
     glm::vec3 LINE_COLOR (1.0f);
     float LINE_WIDTH = 1.0f;
+    line->setProjection(cam->get());
 
     // Rendering: with list 
     // {
@@ -88,10 +89,8 @@ void render()
         float x_last = 20.0f;
         int count = 500;
         float dx = (x_last - x_first) / ((float) (count - 1));
-        float freq = 1.2f;
 
         float x = x_first;
-        line->setProjection(cam->get());
         for (int i = 0; i < count - 1; i++)
         {
             line->draw(
@@ -105,7 +104,7 @@ void render()
                 glm::vec3(0.0, 1.0, 0.0),
                 glm::vec3(x, Noise1D::sample_perlin(x), 0.0f),
                 glm::vec3(x + dx, Noise1D::sample_perlin(x + dx), 0.0f),
-                LINE_WIDTH + 0.5f
+                LINE_WIDTH + 2.5f
             );
 
             x = x + dx;
