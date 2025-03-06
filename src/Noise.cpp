@@ -58,11 +58,11 @@ Cubic get_cubic(int x_int_part)
 // Value Noise 1D ----------------------------------------------------------------------------------------
 
 
-float Value_Noise_1D::sample(float x)
+float Value_Noise_1D::sample(float x, float frequency)
 {
     int x_int;
     float x_dec;
-    split(x, x_int, x_dec);
+    split(x * frequency, x_int, x_dec);
 
     return Cubic_Interpolate(get_cubic(x_int), x_dec);
 }
@@ -77,14 +77,9 @@ std::vector<glm::vec2> Value_Noise_1D::sample(int start, int end, int count)
     //      this should improve accuracy. It prevents mixing big floats with small floats (dx).
     //      Never mix big floats and small floats! EH, what do I know, it works atleast!
 
-    assert(end > start);
-    assert(count > 0);
-
-    int length = end - start;
-    float dx = ((float) length) / ((float) (count - 1));
-
     std::vector<glm::vec2> list (count);
 
+    float dx = ((float) end - start) / ((float) (count - 1));
     int i = 0;
     int x_int_part = start;
     float x_dec_part = 0;
@@ -106,6 +101,5 @@ std::vector<glm::vec2> Value_Noise_1D::sample(int start, int end, int count)
         x_int_part++;
     }
 
-    assert(i == count);
     return list;
 }

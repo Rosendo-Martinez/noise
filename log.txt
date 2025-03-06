@@ -204,3 +204,4 @@ Talk to chatGPT about my code, see if theirs anything too wrong iwth it. Then ID
 Feel like shit. Anyways, I think I should focus on code readablity instead of optimizations, atleast when the performance is not < 15FPS.
 So, focus on readibilty, that easier to code to, and fix.
 
+Shit is very hard, doesn't help that I'm also in a bit of pain, fuck.
