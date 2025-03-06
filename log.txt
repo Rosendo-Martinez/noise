@@ -232,4 +232,13 @@ sample_perlin(x)
 
   return hermite_interpolation(r0, r1, x_fract)
 
-So, I'll need random gradient vectors. In this case its just a 
+So, I'll need random gradient vectors. In this case its just a
+
+
+Alright what I've done so far (in 2 days):
+- 1D value noise (cubic)
+- 1D octave value noise (cubic)
+- 1D perlin noise (hermite)
+- 1D octave perlin noise (hermite)
+
+Am I 100% done w/ 1D? 

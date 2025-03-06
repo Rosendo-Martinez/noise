@@ -15,7 +15,7 @@ struct Cubic
 // Helper functions ---------------------------------------------------------------------------------------
 
 
-void split(float x, int& x_int, float& x_dec)
+void split_float(float x, int& x_int, float& x_dec)
 {
     double x_int_double;
     double x_dec_double = modf(x, &x_int_double);
@@ -25,13 +25,13 @@ void split(float x, int& x_int, float& x_dec)
 }
 
 
-float Hermite_Interpolate(float l, float r, float dx)
+float hermite_interpolate(float l, float r, float dx)
 {
     return (2.0f * pow(dx,3) - 3.0f * pow(dx,2) + 1.0f) * l + (-2.0f * pow(dx,3) + 3.0f * pow(dx,2)) * r;
 }
 
 
-float Cubic_Interpolate(const Cubic& cubic, float x)
+float cubic_interpolate(const Cubic& cubic, float x)
 {
     // CREDIT: Hugo Elias
     float P = (cubic.v3 - cubic.v2) - (cubic.v0 - cubic.v1);
@@ -61,9 +61,6 @@ Cubic get_cubic(int x_int_part)
 }
 
 
-// Value Noise 1D ----------------------------------------------------------------------------------------
-
-
 float octave(float x, bool isValue)
 {
     int octaves = 6;
@@ -87,13 +84,16 @@ float octave(float x, bool isValue)
 }
 
 
+// Value Noise 1D ----------------------------------------------------------------------------------------
+
+
 float Noise1D::sample_value(float x)
 {
     int x_int;
     float x_dec;
-    split(x, x_int, x_dec);
+    split_float(x, x_int, x_dec);
 
-    return Cubic_Interpolate(get_cubic(x_int), x_dec);
+    return cubic_interpolate(get_cubic(x_int), x_dec);
 }
 
 
@@ -105,6 +105,10 @@ std::vector<glm::vec2> Noise1D::sample(int start, int end, int count)
     //      we can split the to up into a int and a float, instead of keeping them together in one float
     //      this should improve accuracy. It prevents mixing big floats with small floats (dx).
     //      Never mix big floats and small floats! EH, what do I know, it works atleast!
+
+    // TO DECIDE: DELETE? might delete this later. Its just too complicated, even though it seems to work.
+    //            the other shit is much easier to work with and understand, not this.
+    //            Yes it might be more optimized but its not worth the complexity.
 
     std::vector<glm::vec2> list (count);
 
@@ -120,7 +124,7 @@ std::vector<glm::vec2> Noise1D::sample(int start, int end, int count)
 
         while (x_dec_part < 1.0f && i < count)
         {
-            list[i] = glm::vec2(((float) x_int_part) + x_dec_part, Cubic_Interpolate(cubic, x_dec_part));
+            list[i] = glm::vec2(((float) x_int_part) + x_dec_part, cubic_interpolate(cubic, x_dec_part));
 
             x_dec_part += dx;
             i++;
@@ -144,7 +148,7 @@ float Noise1D::sample_perlin(float x)
 {
     int x_int;
     float x_dec;
-    split(x, x_int, x_dec);
+    split_float(x, x_int, x_dec);
 
     float slope_left = random_float(x_int);
     float slope_right = random_float(x_int + 1);
@@ -153,7 +157,7 @@ float Noise1D::sample_perlin(float x)
     float y_right = slope_right * (x_dec - 1.0f);
 
     float amplitude = 2.0f;
-    return Hermite_Interpolate(y_left, y_right, x_dec) * amplitude;
+    return hermite_interpolate(y_left, y_right, x_dec) * amplitude;
 }
 
 
