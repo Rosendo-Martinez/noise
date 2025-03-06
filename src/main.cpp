@@ -9,7 +9,6 @@ const float CLEAR_COLOR[4] = {0.6, 0.0, 0.1, 0.0};
 Window* window = nullptr;
 LineRenderer* line = nullptr;
 CameraOrthographic* cam = nullptr;
-Value_Noise_1D* value_noise_1d = nullptr;
 
 bool init();
 void render();
@@ -47,7 +46,6 @@ bool init()
 
     line = new LineRenderer();
     cam = new CameraOrthographic(-2.0f, 22.0f, -2.0f, 2.0f, -1.0f, 1.0f);
-    value_noise_1d = new Value_Noise_1D();
 
     return true;
 }
@@ -61,7 +59,7 @@ void render()
     int x_first = 0;
     int x_last = 20;
     int count = 200;
-    std::vector<glm::vec2> noise_samples = value_noise_1d->sample(x_first, x_last, count);
+    std::vector<glm::vec2> noise_samples = Value_Noise_1D::sample(x_first, x_last, count);
 
     line->setProjection(cam->get());
     for (int i = 0; i < noise_samples.size() - 1; i++)

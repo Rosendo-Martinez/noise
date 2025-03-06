@@ -58,9 +58,6 @@ Cubic get_cubic(int x_int_part)
 // Value Noise 1D ----------------------------------------------------------------------------------------
 
 
-Value_Noise_1D::Value_Noise_1D() {}
-
-
 float Value_Noise_1D::sample(float x)
 {
     int x_int;
