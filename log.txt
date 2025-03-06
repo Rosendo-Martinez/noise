@@ -197,3 +197,10 @@ list sample(start, end, count)
 
 WHAT A PAIN this shit was, not sure it was even worth it. I WAS OPTIMIZING IT SO THAT we only deal with floats that aren't too big.
 With tihs algo the floats will always be ~1 or <1! WHY? I barely know about htis floating point shit, ok I do have some experince.
+
+Alright. I'm going on break soon. Lets just take a quick 10 min break. Don't take too long, and relaxe! What to do when I come back?
+Talk to chatGPT about my code, see if theirs anything too wrong iwth it. Then IDK, figure it out then.
+
+Feel like shit. Anyways, I think I should focus on code readablity instead of optimizations, atleast when the performance is not < 15FPS.
+So, focus on readibilty, that easier to code to, and fix.
+

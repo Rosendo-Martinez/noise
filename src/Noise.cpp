@@ -4,16 +4,24 @@
 #include <iostream>
 
 
+struct Cubic
+{
+    float v0, v1, v2, v3;
+
+    Cubic(float v0, float v1, float v2, float v3) : v0(v0), v1(v1), v2(v2), v3(v3) {}
+};
+
+
 // Helper functions ---------------------------------------------------------------------------------------
 
 
-float Cubic_Interpolate(float v0, float v1, float v2, float v3, float x)
+float Cubic_Interpolate(const Cubic& cubic, float x)
 {
     // CREDIT: Hugo Elias
-    float P = (v3 - v2) - (v0 - v1);
-    float Q = (v0 - v1) - P;
-    float R = v2 - v0;
-    float S = v1;
+    float P = (cubic.v3 - cubic.v2) - (cubic.v0 - cubic.v1);
+    float Q = (cubic.v0 - cubic.v1) - P;
+    float R = cubic.v2 - cubic.v0;
+    float S = cubic.v1;
 
     return P * (x * x * x) + Q * (x * x) + R * x + S;
 }
@@ -27,6 +35,13 @@ float random_float(int x)
     // CREDIT: Hugo Elias
     x = (x << 13) ^ x;
     return (1.0f - ((x * (x * x * 15731 + 789221) + 1376312589) & 0x7FFFFFFF) / 1073741824.0f);
+}
+
+
+// Cubic used to interpolate at x's fractional part.
+Cubic get_cubic(int x_int_part)
+{
+    return Cubic(random_float(x_int_part - 1), random_float(x_int_part), random_float(x_int_part + 1), random_float(x_int_part + 2));
 }
 
 
@@ -48,12 +63,7 @@ float Value_Noise_1D::sample(float x)
     double x_fraction = modf(x, &x_intpart_double);
     int x_intpart_int = (int) x_intpart_double;
 
-    float v0 = random_float(x_intpart_int - 1);
-    float v1 = random_float(x_intpart_int);
-    float v2 = random_float(x_intpart_int + 1);
-    float v3 = random_float(x_intpart_int + 2);
-
-    return Cubic_Interpolate(v0, v1, v2, v3, x_fraction);
+    return Cubic_Interpolate(get_cubic(x_intpart_int), x_fraction);
 }
 
 
@@ -80,14 +90,12 @@ std::vector<glm::vec2> Value_Noise_1D::sample(int start, int end, int count)
 
     while (i < count)
     {
-        float v0 = random_float(x_int_part - 1);
-        float v1 = random_float(x_int_part);
-        float v2 = random_float(x_int_part + 1);
-        float v3 = random_float(x_int_part + 2);
+        // Interpolated cubic
+        Cubic cubic = get_cubic(x_int_part);
 
         while (x_dec_part < 1.0f && i < count)
         {
-            list[i] = glm::vec2(((float) x_int_part) + x_dec_part, Cubic_Interpolate(v0, v1, v2, v3, x_dec_part));
+            list[i] = glm::vec2(((float) x_int_part) + x_dec_part, Cubic_Interpolate(cubic, x_dec_part));
 
             x_dec_part += dx;
             i++;
