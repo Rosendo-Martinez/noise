@@ -86,7 +86,7 @@ void render()
     {
         float x_first = 0.0f;
         float x_last = 20.0f;
-        int count = 400;
+        int count = 500;
         float dx = (x_last - x_first) / ((float) (count - 1));
         float freq = 1.2f;
 
@@ -96,9 +96,9 @@ void render()
         {
             line->draw(
                 LINE_COLOR,
-                glm::vec3(x, Value_Noise_1D::sample(x, freq), 0.0f),
-                glm::vec3(x + dx, Value_Noise_1D::sample(x + dx, freq), 0.0f),
-                LINE_WIDTH
+                glm::vec3(x, Value_Noise_1D::sample_octave(x), 0.0f),
+                glm::vec3(x + dx, Value_Noise_1D::sample_octave(x + dx), 0.0f),
+                LINE_WIDTH + 1.25
             );
 
             x = x + dx;

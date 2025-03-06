@@ -205,3 +205,16 @@ Feel like shit. Anyways, I think I should focus on code readablity instead of op
 So, focus on readibilty, that easier to code to, and fix.
 
 Shit is very hard, doesn't help that I'm also in a bit of pain, fuck.
+
+
+I think I can add octave noise now.
+
+octave(x)
+
+  octaves = ?
+  freq = 2
+  persitance = ?
+
+  for i = 0 to octaves:
+    total = sample(x * 2^(i)) * (perstiance ^ (octaves))
+

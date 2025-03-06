@@ -58,11 +58,11 @@ Cubic get_cubic(int x_int_part)
 // Value Noise 1D ----------------------------------------------------------------------------------------
 
 
-float Value_Noise_1D::sample(float x, float frequency)
+float Value_Noise_1D::sample(float x)
 {
     int x_int;
     float x_dec;
-    split(x * frequency, x_int, x_dec);
+    split(x, x_int, x_dec);
 
     return Cubic_Interpolate(get_cubic(x_int), x_dec);
 }
@@ -102,4 +102,20 @@ std::vector<glm::vec2> Value_Noise_1D::sample(int start, int end, int count)
     }
 
     return list;
+}
+
+
+float Value_Noise_1D::sample_octave(float x)
+{
+    int octaves = 6;
+    int frequency = 2;
+    float amplitude = 0.5f;
+
+    float total = 0;
+    for (int i = 0; i < octaves; i++)
+    {
+        total += sample(x * pow(frequency, i)) * pow(amplitude, i);
+    }
+
+    return total;
 }
