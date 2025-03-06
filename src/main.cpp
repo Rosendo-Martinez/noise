@@ -39,7 +39,7 @@ int main()
 bool init()
 {
     window = new Window();
-    if (!window->init(700, 700))
+    if (!window->init(800, 800))
     {
         return false;
     }
