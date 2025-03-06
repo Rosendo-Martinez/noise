@@ -3,11 +3,13 @@
 #include "Camera.h"
 #include "LineRenderer.h"
 #include "Noise.h"
+#include "SquareRenderer.h"
 
 const float CLEAR_COLOR[4] = {0.6, 0.0, 0.1, 0.0};
 
 Window* window = nullptr;
 LineRenderer* line = nullptr;
+SquareRenderer* square = nullptr;
 CameraOrthographic* cam = nullptr;
 
 bool init();
@@ -45,6 +47,7 @@ bool init()
     }
 
     line = new LineRenderer();
+    square = new SquareRenderer();
     cam = new CameraOrthographic(-2.0f, 22.0f, -2.0f, 2.0f, -1.0f, 1.0f);
 
     return true;
@@ -56,6 +59,9 @@ void render()
     glClearColor(CLEAR_COLOR[0], CLEAR_COLOR[1], CLEAR_COLOR[2], CLEAR_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // Draw square background
+    square->setProjection(cam->get());
+    square->draw(glm::vec3(10.0f,0.0f,0.0f), glm::vec2(20.0f, 2.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.0f, glm::vec3(0.4f));
 
     glm::vec3 LINE_COLOR (1.0f);
     float LINE_WIDTH = 1.0f;

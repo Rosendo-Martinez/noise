@@ -2,10 +2,6 @@
 #include "LineRenderer.h"
 
 
-const char* VERTEX_SHADER = "shaders/line.vs";
-const char* FRAGMENT_SHADER = "shaders/line.fs";
-
-
 LineRenderer::LineRenderer() 
 {
     this->init();    
@@ -14,6 +10,9 @@ LineRenderer::LineRenderer()
 
 void LineRenderer::init()
 {
+    const char* VERTEX_SHADER = "shaders/line.vs";
+    const char* FRAGMENT_SHADER = "shaders/line.fs";
+
     const float vertices[] = 
     {
         0.0f, 0.0f,

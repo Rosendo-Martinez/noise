@@ -241,4 +241,34 @@ Alright what I've done so far (in 2 days):
 - 1D perlin noise (hermite)
 - 1D octave perlin noise (hermite)
 
-Am I 100% done w/ 1D? 
+Am I 100% done w/ 1D? Yes. Next up is 2D noise!
+Well, I can either visualize it in 2D or 3D. Not sure what though.
+I could do both. For 2D I'm thinking just to make a texture and put it on a quad,
+that would be very easy, or I could draw a bunch of tiny quads and grey scale color them. 
+For 3D I could just use cuboids, and the height of the cuboid will be equal to the sample value. 
+
+I think I'm just going to skip 3D noise.
+Well, I'll figure that out tomorrow.
+
+GOAL: When performance is ok, choose simplicity over complexity.
+      Only deal with complexity when the performance gains are worth it.
+
+Problems: the gui is all fucked up, like I need to change the code to see other shit! 
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+Ok. Today I will add 2D noise. I'm going to implement it by just drawing it to a quad. I'll figure out 
+how to create it as a texture, and then use that to draw on the quad. I'm not 100% sure on 2D noise. 
+I presume its just, Multiple 1D noise (for value at least) stacked on top of each other, so if you want to sample some point
+(x,y) = v then you just do...you interpolate twice. For gradient you just put gradients at each integer value. Not too hard.
+
+To Do:
+- Figure out how to create a 'texture'
+- Create 'squares' that I can draw on
+- Create the 2D noise
+
+I can later try to visualize it in 3D if I get the rest done and still feel like it. But I think I'll have to use cuboids, I mean
+I guess I could see if I could do it with a fine looking mesh.
+
