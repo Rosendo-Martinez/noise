@@ -1,1 +1,0 @@
-void create_bmp(const char* filename, const unsigned char* raw_data, long width, long height);
