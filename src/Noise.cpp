@@ -96,6 +96,12 @@ Cubic get_cubic(int x_int_part)
 }
 
 
+Cubic get_horizontal_cubic(int x, int y)
+{
+    return Cubic(random_float(x - 1, y), random_float(x, y), random_float(x + 1, y), random_float(x + 2, y));
+}
+
+
 float octave(float x, bool isValue, Interpolate interpolate_type)
 {
     int octaves = 6;
@@ -245,4 +251,27 @@ float Noise2D::sample_value_bilinear(float x, float y)
         random_float(x_int + 1, y_int + 1),
         x_dec, y_dec
     );
+}
+
+
+float Noise2D::sample_value_bicubic(float x, float y)
+{
+    int x_int, y_int;
+    float x_dec, y_dec;
+    split_float(x, x_int, x_dec);
+    split_float(y, y_int, y_dec);
+
+    Cubic c0 = get_horizontal_cubic(x, y - 1);
+    Cubic c1 = get_horizontal_cubic(x, y);
+    Cubic c2 = get_horizontal_cubic(x, y + 1);
+    Cubic c3 = get_horizontal_cubic(x, y+ 2);
+
+    float v0 = cubic_interpolate(c0, x_dec);
+    float v1 = cubic_interpolate(c1, x_dec);
+    float v2 = cubic_interpolate(c2, x_dec);
+    float v3 = cubic_interpolate(c3, x_dec);
+
+    Cubic vertical_cubic (v0, v1, v2, v3);
+
+    return cubic_interpolate(vertical_cubic, y_dec);
 }

@@ -4,12 +4,12 @@
 
 int main()
 {
-    int WIDTH = 50;
-    int HEIGHT = 50;
+    int WIDTH = 500;
+    int HEIGHT = 500;
     Image_Grayscale image(WIDTH, HEIGHT);
 
-    int SAMPLE_INTERVAL_WIDTH = 1;
-    int SAMPLE_INTERVAL_HEIGHT = 1;
+    int SAMPLE_INTERVAL_WIDTH = 2;
+    int SAMPLE_INTERVAL_HEIGHT = 2;
 
 
     float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) WIDTH);
@@ -26,7 +26,7 @@ int main()
             float pixel_x = pixel_00_x + (x * dx);
             float pixel_y = pixel_00_y + (y * dy);
 
-            image.setPixel(x,y, Noise2D::sample_value_bilinear(pixel_x, pixel_y));
+            image.setPixel(x, y, Noise2D::sample_value_bicubic(pixel_x, pixel_y));
         }
     }
 

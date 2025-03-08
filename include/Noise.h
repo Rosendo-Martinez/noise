@@ -18,4 +18,5 @@ namespace Noise1D
 namespace Noise2D
 {
     float sample_value_bilinear(float x, float y);
+    float sample_value_bicubic(float x, float y);
 }
