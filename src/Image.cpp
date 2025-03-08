@@ -145,11 +145,12 @@ Image_Grayscale::~Image_Grayscale()
 
 
 // (0,0) is bottom left
+// value can be non-normalized (i.e out of [0,1])
+// will be automatically normalized before saving
 void Image_Grayscale::setPixel(int x, int y, float value)
 {
     assert(x < width && x >= 0);
     assert(y < height && y >= 0);
-    assert(value >= 0.0f && value <= 1.0f);
 
     image[y][x] = value;
 }
@@ -157,6 +158,8 @@ void Image_Grayscale::setPixel(int x, int y, float value)
 
 void Image_Grayscale::save(const char* filename)
 {
+    normalize();
+
     unsigned char* raw_data = new unsigned char[width * height * 3];
 
     int i = 0;
@@ -173,13 +176,49 @@ void Image_Grayscale::save(const char* filename)
             i++;
             raw_data[i] = result; // B
             i++;
-
-
         }
     }
 
     create_bmp(filename, raw_data, width, height);
     delete[] raw_data;
+}
+
+
+// normalized to [0,1]
+void Image_Grayscale::normalize()
+{
+    float min = image[0][0];
+    float max = image[0][0];
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            if (image[y][x] < min)
+            {
+                min = image[y][x];
+            }
+
+            if (image[y][x] > max)
+            {
+                max = image[y][x];
+            }
+        }
+    }
+
+    assert(min < max);
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            // NOTE: could optimize by precomputing 1/interval, and moving it out of
+            //       double for loop
+            float value = (image[y][x] - min) / (max - min);
+            assert(value >= 0.0f && value <= 1.0f);
+            image[y][x] = value;
+        }
+    }
 }
 
 

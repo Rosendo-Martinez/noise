@@ -272,3 +272,65 @@ To Do:
 I can later try to visualize it in 3D if I get the rest done and still feel like it. But I think I'll have to use cuboids, I mean
 I guess I could see if I could do it with a fine looking mesh.
 
+Alright, 1h and 40m to get this square to render, but its done. What next? 5-min. What after? I need to figure out 
+how to 'texture' the square so I can draw 2d noise on it.
+
+BUG: the camera and window are differnt 'sizes' which is causing distoration. IDK.
+
+I'm thinking maybe of just outputting to a image, like BMP, instead of rendering to screen. It does not seem to hard to write a BMP 
+creator. But that will be a side-track that will take maybe a couple hours, maybe even the whole day, sounds fun though. Never created 
+a non-character file. Or, I could just texture the quad. What would be the simplict thing to do? I would like nice BMPs of my noise. So,
+I'll give it this last h of this crank, see where I get from their and replan afterwards! I WANT THE NICE BMPS OF MY NOISE.
+
+This BMP shit, sigh. I'm not sure I can keep going with this shit.
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+Alright, create_bmp() is done! I think I should create some class that can use to create a BMP file. Like class Image().
+Image.save(); --> create_bmp(); For the noise, I would like to just have some Image(), then do:
+
+for each sample of noise (x,y) # sample the noise
+  Image.set(x,y,value); # save noise value to pixel
+
+Image.save() # save to image
+
+Yeah, maybe I should, well I'm not sure how the data will start though.
+
+noise(x,y) = value [-1,1]
+grey_scale = (value + 1) / 2;
+
+vec3 rgb = vec3(grey_scale) ? Why a vec3 if its just greyscale?
+
+Image[x][y] = rgb;
+
+(0,0) should be bottom left pixel.
+
+Will need to convert interal data struture of Image to something that create_bmp can use.
+
+
+Image will hold a 2D array of floats that are grey scale values. 
+
+Image
+{
+  Image(widht, height)
+}
+
+
+Ok, I'm done with this BMP shit. I move back noise. I have to do 2d noise, not 100% on it.
+
+TO DO:
+- 2D value noise, Cubic interpolation
+- [DONE] 2D value noise, Linear interpolation
+- 2D perlin/gradient noise, hermite interpolation
+- [DONE] 1D value noise, linear interpolation
+
+Ok what next? 2D Noise! Ok, but how am I going to test it? I'm going to render it to a BMP.
+I'm thinking of commenting out main in main.cpp, then uncommenting main in Image.cpp. Maybe I should make a proper main.
+I'll make a second main! That main will be for rendering BMPs! 
+
+TO CHECK: isn't perlin 1D supposed to be zero at integers? Not sure it is.
+
+Quick piss break, maybe even tea. Those chips were not a good snack! I got 2D linear value noise to render on a BMP! 
+Next is to do that for the other 2 noise types. But now quick piss & tea break.

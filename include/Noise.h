@@ -14,3 +14,8 @@ namespace Noise1D
     float sample_value_octave_cubic(float x);
     float sample_perlin_octave_hermite(float x);
 }
+
+namespace Noise2D
+{
+    float sample_value_bilinear(float x, float y);
+}

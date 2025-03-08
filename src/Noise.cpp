@@ -31,11 +31,20 @@ void split_float(float x, int& x_int, float& x_dec)
 }
 
 
-float linear_interpolate(float a, float b, float dx)
+float linear_interpolate(float from, float to, float dx)
 {
     assert(dx >= 0.0f && dx <= 1.0f);
 
-    return ((1 - dx) * a) + (dx * b);
+    return ((1 - dx) * from) + (dx * to);
+}
+
+
+float bilinear_interpolate(float bottom_left, float bottom_right, float top_left, float top_right, float dx, float dy)
+{
+    float bottom = linear_interpolate(bottom_left,bottom_right,dx);
+    float top = linear_interpolate(top_left,top_right,dx);
+
+    return linear_interpolate(bottom, top, dy);
 }
 
 
@@ -69,6 +78,14 @@ float random_float(int x)
     // CREDIT: Hugo Elias
     x = (x << 13) ^ x;
     return (1.0f - ((x * (x * x * 15731 + 789221) + 1376312589) & 0x7FFFFFFF) / 1073741824.0f);
+}
+
+
+// [-1.0, 1.0]
+float random_float(int x, int y) {
+    int n = x + y * 57;
+    n = (n << 13) ^ n;
+    return (1.0f - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0f);
 }
 
 
@@ -109,7 +126,7 @@ float octave(float x, bool isValue, Interpolate interpolate_type)
 }
 
 
-// Value Noise 1D ----------------------------------------------------------------------------------------
+// Noise 1D ----------------------------------------------------------------------------------------
 
 
 // Samples noise over interval [start, end] a count times.
@@ -208,4 +225,24 @@ float Noise1D::sample_value_linear(float x)
 float Noise1D::sample_value_octave_linear(float x)
 {
     return octave(x, true, Interpolate::Linear);
+}
+
+
+// Noise 2D -------------------------------------------------------------------------
+
+
+float Noise2D::sample_value_bilinear(float x, float y)
+{
+    int x_int, y_int;
+    float x_dec, y_dec;
+    split_float(x, x_int, x_dec);
+    split_float(y, y_int, y_dec);
+
+    return bilinear_interpolate(
+        random_float(x_int, y_int), 
+        random_float(x_int + 1, y_int),
+        random_float(x_int, y_int + 1), 
+        random_float(x_int + 1, y_int + 1),
+        x_dec, y_dec
+    );
 }

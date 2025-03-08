@@ -13,4 +13,6 @@ private:
     float** image;
     int width;
     int height;
+    
+    void normalize();
 };

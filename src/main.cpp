@@ -17,22 +17,22 @@ void render();
 void input();
 
 
-int main() 
-{
-    if (!init())
-    {
-        return 0;
-    }
+// int main() 
+// {
+//     if (!init())
+//     {
+//         return 0;
+//     }
 
-    while (!window->shouldClose())
-    {
-        input();
-        render();
-    }
+//     while (!window->shouldClose())
+//     {
+//         input();
+//         render();
+//     }
 
-    window->terminate();
-    return 0;
-}
+//     window->terminate();
+//     return 0;
+// }
 
 
 // Function defintions -----------------------------------------------------------------------
