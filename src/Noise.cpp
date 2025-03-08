@@ -4,6 +4,12 @@
 #include <iostream>
 
 
+enum class Interpolate
+{
+    Linear, Cubic, Hermite
+};
+
+
 struct Cubic
 {
     float v0, v1, v2, v3;
@@ -25,14 +31,26 @@ void split_float(float x, int& x_int, float& x_dec)
 }
 
 
+float linear_interpolate(float a, float b, float dx)
+{
+    assert(dx >= 0.0f && dx <= 1.0f);
+
+    return ((1 - dx) * a) + (dx * b);
+}
+
+
 float hermite_interpolate(float l, float r, float dx)
 {
+    assert(dx >= 0.0f && dx <= 1.0f);
+
     return (2.0f * pow(dx,3) - 3.0f * pow(dx,2) + 1.0f) * l + (-2.0f * pow(dx,3) + 3.0f * pow(dx,2)) * r;
 }
 
 
 float cubic_interpolate(const Cubic& cubic, float x)
 {
+    assert(x >= 0.0f && x <= 1.0f);
+
     // CREDIT: Hugo Elias
     float P = (cubic.v3 - cubic.v2) - (cubic.v0 - cubic.v1);
     float Q = (cubic.v0 - cubic.v1) - P;
@@ -61,7 +79,7 @@ Cubic get_cubic(int x_int_part)
 }
 
 
-float octave(float x, bool isValue)
+float octave(float x, bool isValue, Interpolate interpolate_type)
 {
     int octaves = 6;
     int frequency = 2;
@@ -70,13 +88,20 @@ float octave(float x, bool isValue)
     float total = 0;
     for (int i = 0; i < octaves; i++)
     {
-        if (isValue)
+        if (isValue) // value noise
         {
-            total += Noise1D::sample_value(x * pow(frequency, i)) * pow(amplitude, i);
+            if (interpolate_type == Interpolate::Cubic)
+            {
+                total += Noise1D::sample_value_cubic(x * pow(frequency, i)) * pow(amplitude, i);
+            }
+            else
+            {
+                total += Noise1D::sample_value_linear(x * pow(frequency, i)) * pow(amplitude, i);
+            }
         }
-        else // perlin
+        else // perlin / gradient noise
         {
-            total += Noise1D::sample_perlin(x * pow(frequency, i)) * pow(amplitude, i);
+            total += Noise1D::sample_perlin_hermite(x * pow(frequency, i)) * pow(amplitude, i);
         }
     }
 
@@ -85,16 +110,6 @@ float octave(float x, bool isValue)
 
 
 // Value Noise 1D ----------------------------------------------------------------------------------------
-
-
-float Noise1D::sample_value(float x)
-{
-    int x_int;
-    float x_dec;
-    split_float(x, x_int, x_dec);
-
-    return cubic_interpolate(get_cubic(x_int), x_dec);
-}
 
 
 // Samples noise over interval [start, end] a count times.
@@ -138,13 +153,23 @@ std::vector<glm::vec2> Noise1D::sample(int start, int end, int count)
 }
 
 
-float Noise1D::sample_value_octave(float x)
+float Noise1D::sample_value_cubic(float x)
 {
-    return octave(x, true);
+    int x_int;
+    float x_dec;
+    split_float(x, x_int, x_dec);
+
+    return cubic_interpolate(get_cubic(x_int), x_dec);
 }
 
 
-float Noise1D::sample_perlin(float x)
+float Noise1D::sample_value_octave_cubic(float x)
+{
+    return octave(x, true, Interpolate::Cubic);
+}
+
+
+float Noise1D::sample_perlin_hermite(float x)
 {
     int x_int;
     float x_dec;
@@ -161,7 +186,26 @@ float Noise1D::sample_perlin(float x)
 }
 
 
-float Noise1D::sample_perlin_octave(float x)
+float Noise1D::sample_perlin_octave_hermite(float x)
 {
-    return octave(x, false);
+    return octave(x, false, Interpolate::Hermite);
+}
+
+
+float Noise1D::sample_value_linear(float x)
+{
+    int x_int;
+    float x_dec;
+    split_float(x, x_int, x_dec);
+
+    float left = random_float(x_int);
+    float right = random_float(x_int + 1);
+
+    return linear_interpolate(left, right, x_dec);  
+}
+
+
+float Noise1D::sample_value_octave_linear(float x)
+{
+    return octave(x, true, Interpolate::Linear);
 }

@@ -101,15 +101,15 @@ void render()
         {
             line->draw(
                 LINE_COLOR,
-                glm::vec3(x, Noise1D::sample_perlin_octave(x), 0.0f),
-                glm::vec3(x + dx, Noise1D::sample_perlin_octave(x + dx), 0.0f),
+                glm::vec3(x, Noise1D::sample_value_octave_linear(x), 0.0f),
+                glm::vec3(x + dx, Noise1D::sample_value_octave_linear(x + dx), 0.0f),
                 LINE_WIDTH + 1.25
             );
 
             line->draw(
                 glm::vec3(0.0, 1.0, 0.0),
-                glm::vec3(x, Noise1D::sample_perlin(x), 0.0f),
-                glm::vec3(x + dx, Noise1D::sample_perlin(x + dx), 0.0f),
+                glm::vec3(x, Noise1D::sample_value_linear(x), 0.0f),
+                glm::vec3(x + dx, Noise1D::sample_value_linear(x + dx), 0.0f),
                 LINE_WIDTH + 2.5f
             );
 
