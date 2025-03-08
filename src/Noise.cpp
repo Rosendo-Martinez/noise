@@ -4,6 +4,9 @@
 #include <iostream>
 
 
+#define PI 3.14159265
+
+
 enum class Interpolate
 {
     Linear, Cubic, Hermite
@@ -15,6 +18,15 @@ struct Cubic
     float v0, v1, v2, v3;
 
     Cubic(float v0, float v1, float v2, float v3) : v0(v0), v1(v1), v2(v2), v3(v3) {}
+};
+
+
+struct Vector
+{
+    float x, y;
+
+    Vector() : x(0.0f), y(0.0f) {}
+    Vector(float x, float y) : x(x), y(y) {}
 };
 
 
@@ -48,11 +60,11 @@ float bilinear_interpolate(float bottom_left, float bottom_right, float top_left
 }
 
 
-float hermite_interpolate(float l, float r, float dx)
+float hermite_interpolate(float from, float to, float dx)
 {
     assert(dx >= 0.0f && dx <= 1.0f);
 
-    return (2.0f * pow(dx,3) - 3.0f * pow(dx,2) + 1.0f) * l + (-2.0f * pow(dx,3) + 3.0f * pow(dx,2)) * r;
+    return (2.0f * pow(dx,3) - 3.0f * pow(dx,2) + 1.0f) * from + (-2.0f * pow(dx,3) + 3.0f * pow(dx,2)) * to;
 }
 
 
@@ -86,6 +98,35 @@ float random_float(int x, int y) {
     int n = x + y * 57;
     n = (n << 13) ^ n;
     return (1.0f - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0f);
+}
+
+
+Vector random_gradient(int x, int y)
+{
+    float theta = random_float(x,y) * PI;
+    assert(theta >= -PI && theta <= PI);
+
+    Vector gradient;
+    gradient.x = cos(theta);
+    gradient.y = sin(theta);
+
+    double length = sqrt(pow(gradient.x, 2) + pow(gradient.y, 2));
+    assert(1 - length < 0.0001 && 1 - length > -0.0001);
+
+    return gradient;
+}
+
+
+float dot(const Vector& v1, const Vector& v2)
+{
+    return (v1.x * v2.x) + (v1.y * v2.y);
+}
+
+
+// v1 - v2
+Vector subtract(const Vector& v1, const Vector& v2)
+{
+    return Vector(v1.x - v2.x, v1.y - v2.y);
 }
 
 
@@ -274,4 +315,31 @@ float Noise2D::sample_value_bicubic(float x, float y)
     Cubic vertical_cubic (v0, v1, v2, v3);
 
     return cubic_interpolate(vertical_cubic, y_dec);
+}
+
+
+float Noise2D::sample_perlin_hermite(float x, float y)
+{
+    int x_int, y_int;
+    float x_dec, y_dec;
+    split_float(x, x_int, x_dec);
+    split_float(y, y_int, y_dec);
+
+    Vector g_tl = random_gradient(x_int, y_int + 1);
+    Vector g_tr = random_gradient(x_int + 1, y_int + 1);
+    Vector g_br = random_gradient(x_int + 1, y_int);
+    Vector g_bl = random_gradient(x_int, y_int);
+
+    Vector dx (x_dec, y_dec);
+    Vector dx_tl = subtract(dx, Vector(0.0f, 1.0f));
+    Vector dx_tr = subtract(dx, Vector(1.0f, 1.0f));
+    Vector dx_br = subtract(dx, Vector(1.0f, 0.0f));
+    Vector dx_bl = dx;
+
+    float dot_tl = dot(g_tl, dx_tl);
+    float dot_tr = dot(g_tr, dx_tr);
+    float dot_br = dot(g_br, dx_br);
+    float dot_bl = dot(g_bl, dx_bl);
+
+    return hermite_interpolate(hermite_interpolate(dot_bl, dot_br, x_dec), hermite_interpolate(dot_tl, dot_tr, x_dec), y_dec);
 }

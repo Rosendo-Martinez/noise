@@ -334,3 +334,8 @@ TO CHECK: isn't perlin 1D supposed to be zero at integers? Not sure it is.
 
 Quick piss break, maybe even tea. Those chips were not a good snack! I got 2D linear value noise to render on a BMP! 
 Next is to do that for the other 2 noise types. But now quick piss & tea break.
+
+Lets do Cubic next.
+
+
+TO CHECK: make sure random genreators return SAME VALUES! 

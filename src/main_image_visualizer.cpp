@@ -4,17 +4,15 @@
 
 int main()
 {
-    int WIDTH = 500;
-    int HEIGHT = 500;
+    int WIDTH = 1000;
+    int HEIGHT = 1000;
     Image_Grayscale image(WIDTH, HEIGHT);
 
-    int SAMPLE_INTERVAL_WIDTH = 2;
-    int SAMPLE_INTERVAL_HEIGHT = 2;
-
+    int SAMPLE_INTERVAL_WIDTH = 25;
+    int SAMPLE_INTERVAL_HEIGHT = 25;
 
     float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) WIDTH);
     float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) HEIGHT);
-
 
     float pixel_00_x = dx * 0.5f;
     float pixel_00_y = dy * 0.5f;
@@ -26,7 +24,7 @@ int main()
             float pixel_x = pixel_00_x + (x * dx);
             float pixel_y = pixel_00_y + (y * dy);
 
-            image.setPixel(x, y, Noise2D::sample_value_bicubic(pixel_x, pixel_y));
+            image.setPixel(x, y, Noise2D::sample_perlin_hermite(pixel_x, pixel_y));
         }
     }
 
