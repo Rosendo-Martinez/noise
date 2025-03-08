@@ -20,4 +20,8 @@ namespace Noise2D
     float sample_value_bilinear(float x, float y);
     float sample_value_bicubic(float x, float y);
     float sample_perlin_hermite(float x, float y);
+
+    float sample_value_octave_bilinear(float x, float y);
+    float sample_value_octave_bicubic(float x, float y);
+    float sample_perlin_octave_hermite(float x, float y);
 }

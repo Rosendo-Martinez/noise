@@ -321,16 +321,15 @@ Image
 Ok, I'm done with this BMP shit. I move back noise. I have to do 2d noise, not 100% on it.
 
 TO DO:
-- 2D value noise, Cubic interpolation
+- [DONE] 2D value noise, Cubic interpolation
 - [DONE] 2D value noise, Linear interpolation
-- 2D perlin/gradient noise, hermite interpolation
+- [DONE] 2D perlin/gradient noise, hermite interpolation
 - [DONE] 1D value noise, linear interpolation
 
 Ok what next? 2D Noise! Ok, but how am I going to test it? I'm going to render it to a BMP.
 I'm thinking of commenting out main in main.cpp, then uncommenting main in Image.cpp. Maybe I should make a proper main.
 I'll make a second main! That main will be for rendering BMPs! 
 
-TO CHECK: isn't perlin 1D supposed to be zero at integers? Not sure it is.
 
 Quick piss break, maybe even tea. Those chips were not a good snack! I got 2D linear value noise to render on a BMP! 
 Next is to do that for the other 2 noise types. But now quick piss & tea break.
@@ -338,4 +337,15 @@ Next is to do that for the other 2 noise types. But now quick piss & tea break.
 Lets do Cubic next.
 
 
+TO CHECK: isn't perlin 1D supposed to be zero at integers? Not sure it is.
 TO CHECK: make sure random genreators return SAME VALUES! 
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+
+Anyways, what the fuck am I doing?
+
+TO DO:
+- Octave
+- 3d visualizer

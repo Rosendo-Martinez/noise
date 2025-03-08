@@ -173,6 +173,36 @@ float octave(float x, bool isValue, Interpolate interpolate_type)
 }
 
 
+float octave(float x, float  y, bool isValue, Interpolate interpolate_type)
+{
+    int octaves = 6;
+    int frequency = 2;
+    float amplitude = 0.5f;
+
+    float total = 0;
+    for (int i = 0; i < octaves; i++)
+    {
+        if (isValue) // value noise
+        {
+            if (interpolate_type == Interpolate::Cubic)
+            {
+                total += Noise2D::sample_value_bicubic(x * pow(frequency, i), y * pow(frequency, i)) * pow(amplitude, i);
+            }
+            else
+            {
+                total += Noise2D::sample_value_bilinear(x * pow(frequency, i), y * pow(frequency, i)) * pow(amplitude, i);
+            }
+        }
+        else // perlin / gradient noise
+        {
+            total += Noise2D::sample_perlin_hermite(x * pow(frequency, i), y * pow(frequency, i)) * pow(amplitude, i);
+        }
+    }
+
+    return total;
+}
+
+
 // Noise 1D ----------------------------------------------------------------------------------------
 
 
@@ -295,6 +325,12 @@ float Noise2D::sample_value_bilinear(float x, float y)
 }
 
 
+float Noise2D::sample_value_octave_bilinear(float x, float y)
+{
+    return octave(x, y, true, Interpolate::Linear);
+}
+
+
 float Noise2D::sample_value_bicubic(float x, float y)
 {
     int x_int, y_int;
@@ -315,6 +351,12 @@ float Noise2D::sample_value_bicubic(float x, float y)
     Cubic vertical_cubic (v0, v1, v2, v3);
 
     return cubic_interpolate(vertical_cubic, y_dec);
+}
+
+
+float Noise2D::sample_value_octave_bicubic(float x, float y)
+{
+    return octave(x, y, true, Interpolate::Cubic);
 }
 
 
@@ -342,4 +384,10 @@ float Noise2D::sample_perlin_hermite(float x, float y)
     float dot_bl = dot(g_bl, dx_bl);
 
     return hermite_interpolate(hermite_interpolate(dot_bl, dot_br, x_dec), hermite_interpolate(dot_tl, dot_tr, x_dec), y_dec);
+}
+
+
+float Noise2D::sample_perlin_octave_hermite(float x, float y)
+{
+    return octave(x, y, false, Interpolate::Hermite);
 }
