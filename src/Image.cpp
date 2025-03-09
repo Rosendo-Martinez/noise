@@ -140,7 +140,12 @@ Image_Grayscale::Image_Grayscale(int width, int height)
 
 Image_Grayscale::~Image_Grayscale()
 {
-    // TODO
+    for (int row = 0; row < height; row++)
+    {
+        delete[] image[row];
+    };
+
+    delete[] image;
 };
 
 

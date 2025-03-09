@@ -69,6 +69,8 @@ int main()
 
 float get_noise(float x);
 float get_noise_octave(float x);
+void construct_height_map();
+void construct_instances();
 
 
 bool init()
@@ -89,59 +91,8 @@ bool init()
 
     direction_to_light = glm::normalize(glm::vec3(2.0f, 4.0f, 1.0f));
 
-    // Fill height_map with data
-
-    height_map_width = 200;
-    height_map_height = 200;
-    height_map = new Image_Grayscale(height_map_width, height_map_height);
-    int SAMPLE_INTERVAL_WIDTH = 10;
-    int SAMPLE_INTERVAL_HEIGHT = 10;
-    float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) height_map_width);
-    float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) height_map_height);
-    float pixel_00_x = dx * 0.5f;
-    float pixel_00_y = dy * 0.5f;
-
-    for (int y = 0; y < height_map_height; y++)
-    {
-        for (int x = 0; x < height_map_width; x++)
-        {
-            float pixel_x = pixel_00_x + (x * dx);
-            float pixel_y = pixel_00_y + (y * dy);
-
-            height_map->setPixel(x, y, Noise2D::sample_value_bilinear(pixel_x, pixel_y));
-        }
-    }
-    height_map->normalize();
-
-    // Set up instances
-
-    int instances = height_map_width * height_map_height;
-    glm::vec3* color_array = new glm::vec3[instances];
-    glm::vec3* translate_array = new glm::vec3[instances];
-    glm::vec3* scale_array = new glm::vec3[instances];
-
-    float cuboid_width_x = 0.1f;
-    float cuboid_length_z = 0.1f;
-    float cuboid_height_scaling = 2.0f;
-    float cuboid00_x = cuboid_width_x * 0.5f - (cuboid_width_x * height_map_width * 0.5f);
-    float cuboid00_z = cuboid_length_z * 0.5f - (cuboid_length_z * height_map_height * 0.5f);
-
-    int i = 0;
-    for (int z = 0; z < height_map_height; z++)
-    {
-        for (int x = 0; x < height_map_width; x++)
-        {
-            color_array[i] = glm::vec3(1.0f);
-            translate_array[i] = glm::vec3(cuboid00_x + cuboid_width_x * x, 0.0f, cuboid00_z + cuboid_length_z * z);
-            scale_array[i] = glm::vec3(cuboid_width_x, (height_map->getPixel(x,z) + 0.1) * cuboid_height_scaling, cuboid_length_z);
-            i++;
-        }
-    }
-
-    cuboid->update_instances(color_array, translate_array, scale_array, instances);
-    delete[] color_array;
-    delete[] translate_array;
-    delete[] scale_array;
+    construct_height_map();
+    construct_instances();
 
     return true;
 }
@@ -303,6 +254,12 @@ void input()
             noise_type = Noise_Type::value_linear;
         }
 
+        if (mode == Mode::render3D)
+        {
+            construct_height_map();
+            construct_instances();
+        }
+
         keys[GLFW_KEY_SPACE].duplicate = true;
     }
 }
@@ -357,4 +314,104 @@ float get_noise_octave(float x)
     {
         return Noise1D::sample_perlin_octave_hermite(x);
     }
+}
+
+
+float get_noise(float x, float y)
+{
+    bool is_octave_noise = false; // TODO: make global, and toggle-able by user input
+
+    if (is_octave_noise)
+    {
+        if (noise_type == Noise_Type::value_linear)
+        {
+            return Noise2D::sample_value_octave_bilinear(x,y);
+        }
+        else if (noise_type == Noise_Type::value_cubic)
+        {
+            return Noise2D::sample_value_octave_bicubic(x, y);
+        }
+        else
+        {
+            return Noise2D::sample_perlin_octave_hermite(x,y);
+        }
+    }
+    else
+    {
+        if (noise_type == Noise_Type::value_linear)
+        {
+            return Noise2D::sample_value_bilinear(x,y);
+        }
+        else if (noise_type == Noise_Type::value_cubic)
+        {
+            return Noise2D::sample_value_bicubic(x, y);
+        }
+        else
+        {
+            return Noise2D::sample_perlin_hermite(x,y);
+        }
+    }
+}
+
+
+void construct_height_map()
+{
+    if (height_map != nullptr)
+    {
+        delete height_map;
+    }
+
+    height_map_width = 200;
+    height_map_height = 200;
+    height_map = new Image_Grayscale(height_map_width, height_map_height);
+    int SAMPLE_INTERVAL_WIDTH = 10;
+    int SAMPLE_INTERVAL_HEIGHT = 10;
+    float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) height_map_width);
+    float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) height_map_height);
+    float pixel_00_x = dx * 0.5f;
+    float pixel_00_y = dy * 0.5f;
+
+    for (int y = 0; y < height_map_height; y++)
+    {
+        for (int x = 0; x < height_map_width; x++)
+        {
+            float pixel_x = pixel_00_x + (x * dx);
+            float pixel_y = pixel_00_y + (y * dy);
+
+            height_map->setPixel(x, y, get_noise(pixel_x, pixel_y));
+        }
+    }
+    height_map->normalize();
+}
+
+
+void construct_instances()
+{
+    int instances = height_map_width * height_map_height;
+    glm::vec3* color_array = new glm::vec3[instances];
+    glm::vec3* translate_array = new glm::vec3[instances];
+    glm::vec3* scale_array = new glm::vec3[instances];
+
+    float cuboid_width_x = 0.1f;
+    float cuboid_length_z = 0.1f;
+    float cuboid_height_scaling = 2.0f;
+    float cuboid00_x = cuboid_width_x * 0.5f - (cuboid_width_x * height_map_width * 0.5f);
+    float cuboid00_z = cuboid_length_z * 0.5f - (cuboid_length_z * height_map_height * 0.5f);
+
+    int i = 0;
+    for (int z = 0; z < height_map_height; z++)
+    {
+        for (int x = 0; x < height_map_width; x++)
+        {
+            color_array[i] = glm::vec3(1.0f);
+            translate_array[i] = glm::vec3(cuboid00_x + cuboid_width_x * x, 0.0f, cuboid00_z + cuboid_length_z * z);
+            scale_array[i] = glm::vec3(cuboid_width_x, (height_map->getPixel(x,z) + 0.1) * cuboid_height_scaling, cuboid_length_z);
+            i++;
+        }
+    }
+
+    cuboid->update_instances(color_array, translate_array, scale_array, instances);
+    delete[] color_array;
+    delete[] translate_array;
+    delete[] scale_array;
 }
