@@ -2,9 +2,27 @@
 #include <iostream>
 
 
+Key keys[GLFW_KEY_LAST];
+
+
 void error_callback(int error, const char* description)
 {
     std::cerr << "Error: " << description << '\n';
+}
+
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (action == GLFW_PRESS)
+    {
+        keys[key].is_pressed = true;
+        keys[key].duplicate = false;
+    }
+    else if (action == GLFW_RELEASE)
+    {
+        keys[key].is_pressed = false;
+        keys[key].duplicate = false;
+    }
 }
 
 
@@ -41,6 +59,8 @@ bool Window::init(int width, int height)
         std::cerr << "Error: failed to initialize GLAD" << '\n';
         return false;
     }
+
+    glfwSetKeyCallback(window, key_callback);
 
     return true;
 }

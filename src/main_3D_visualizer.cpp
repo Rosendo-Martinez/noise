@@ -28,6 +28,12 @@ Image_Grayscale* height_map = nullptr;
 int height_map_width;
 int height_map_height;
 
+enum class Mode
+{
+    render3D, render2D
+} mode;
+
+
 bool init();
 void render();
 void update();
@@ -63,6 +69,8 @@ bool init()
     {
         return false;
     }
+
+    mode = Mode::render3D;
 
     line = new LineRenderer();
     square = new SquareRenderer();
@@ -135,6 +143,7 @@ bool init()
 
 void render2D()
 {
+    glDisable(GL_DEPTH_TEST);
     glClearColor(CLEAR_COLOR[0], CLEAR_COLOR[1], CLEAR_COLOR[2], CLEAR_COLOR[3]);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -224,8 +233,6 @@ void render2D()
         glm::vec3(20,-1,0),
         LINE_WIDTH
     );
-
-    window->swapBuffers();
 }
 
 
@@ -238,14 +245,21 @@ void render3D()
     cuboid->setProjectionView(cam_pers->get_projection_view_matrix());
     cuboid->setDirectionLight(direction_to_light);
     cuboid->draw_instances();
-
-    window->swapBuffers();
 }
 
 
 void render()
 {
-    render3D();
+    if (mode == Mode::render2D)
+    {
+        render2D();
+    }
+    else
+    {
+        render3D();
+    }
+
+    window->swapBuffers();
 }
 
 
@@ -255,6 +269,15 @@ void render()
 void input()
 {
     window->pollEvents();
+
+    // No logic, just getting user input.
+    // update() does calculations and logic.
+
+    if (keys[GLFW_KEY_M].is_pressed && !keys[GLFW_KEY_M].duplicate)
+    {
+        mode = mode == Mode::render2D ? Mode::render3D : Mode::render2D;
+        keys[GLFW_KEY_M].duplicate = true;
+    }
 }
 
 
@@ -263,8 +286,11 @@ void input()
 
 void update()
 {
-    cam_pos.z = cos(glfwGetTime() / 2.0f) * 7.0f;
-    cam_pos.x = sin(glfwGetTime() / 2.0f) * 7.0f;
-    cam_pos.y = sin(glfwGetTime() / 2.0f) * 2.0f + 5.0f;
-    cam_pers->move(cam_pos);
+    if (mode == Mode::render3D)
+    {
+        cam_pos.z = cos(glfwGetTime() / 2.0f) * 7.0f;
+        cam_pos.x = sin(glfwGetTime() / 2.0f) * 7.0f;
+        cam_pos.y = sin(glfwGetTime() / 2.0f) * 2.0f + 5.0f;
+        cam_pers->move(cam_pos);
+    }
 }

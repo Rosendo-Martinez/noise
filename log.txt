@@ -420,7 +420,7 @@ Also, I compeletly forgot about adding text. Text would make the project look mu
 bi-cubic interpolation". <--- very cool. 
 
 To Do:
-- [] Clean up / Refactor
+- [DONE] Clean up / Refactor
 - [] Feature: switch between 2d and 1d noise
 - [] Feature: switch between value & gradient noise
 - [] Feature: switch between interpolation schemes
@@ -434,3 +434,21 @@ I think after doing all this I will be very happy. I have some other shit to do 
 But, I always have tomorrow.
 
 The STRIDE is number of bytes to get from one attribute to another attribute of the same time. ONLY needed when attributes are interleaved in 1 buffer.
+
+IDEA: move 2d sampling shit out of render2D() and into init()!!!!
+
+Addd a mode enum!
+
+2 ways to get input from glfw
+callback()
+query(key)
+
+What input do I want, how am I going to use it? Well, mostly just to check what key is pressed. I will also likely only need to check 1 per key pesss, so no duplication.
+
+I'm copyying JDAH.
+
+Keys keys[];
+
+Key { isPressed, duplicate }
+
+isPressed tells you if the key is currntlty being pressed, duplicate tells you if is a duplicate (i.e being held down)!

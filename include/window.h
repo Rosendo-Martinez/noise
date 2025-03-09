@@ -3,6 +3,14 @@
 #include <glad/glad.h>
 
 
+struct Key
+{
+    bool is_pressed = false;
+    bool duplicate = false;
+};
+
+extern Key keys[GLFW_KEY_LAST];
+
 class Window
 {
 public:
