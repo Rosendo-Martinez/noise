@@ -1,5 +1,42 @@
 #include <glad/glad.h>
 #include "CuboidRenderer.h"
+#include <iostream>
+
+#define CUBOID_VERTICES_COUNT 36
+
+
+// Helper functions -------------------------------------------------------------------------
+
+
+void upload_to_buffer(unsigned int vbo, unsigned int size, const void* data)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+
+unsigned int create_buffer()
+{
+    unsigned int vbo;
+    glGenBuffers(1, &vbo);
+    return vbo;
+}
+
+
+// Assumes VAO is bound already
+// stride should be zero for buffers that only contain 1 attribute (i.e not interleaved attributes)
+void create_attribute(int index, int vbo, int number_of_floats, int stride, int offset, int divisor)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glEnableVertexAttribArray(index);
+    glVertexAttribPointer(index, number_of_floats, GL_FLOAT, GL_FALSE, stride, (void*) offset);
+    glVertexAttribDivisor(index, divisor);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+
+// Cuboid Renderer ---------------------------------------------------------------------------
 
 
 CuboidRenderer::CuboidRenderer()
@@ -66,26 +103,27 @@ void CuboidRenderer::init()
         -0.5f, 0.0f,  0.5f,   0.0f, -1.0f,  0.0f,
     };
 
-    // Generate IDs
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);    
-    glGenBuffers(1, &VBO);
+    
+    // VAO
+    glGenVertexArrays(1, &this->vao);
+    glBindVertexArray(this->vao);
 
-    // Bind VAO
-    glBindVertexArray(VAO);
+    // Cube
+    unsigned int cube_vbo = create_buffer();
+    upload_to_buffer(cube_vbo, sizeof(vertices), vertices);
+    create_attribute(0, cube_vbo, 3, 6 * sizeof(float), 0, 0); // position
+    create_attribute(1, cube_vbo, 3, 6 * sizeof(float), 3 * sizeof(float), 0); // normal
 
-    // vertex buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // Instancing buffers
+    color_vbo = create_buffer();
+    create_attribute(2, color_vbo, 3, 0, 0, 1);
+    translate_vbo = create_buffer();
+    create_attribute(3, translate_vbo, 3, 0, 0, 1);
+    scale_vbo = create_buffer();
+    create_attribute(4, scale_vbo, 3, 0, 0, 1);
 
-    // Attribute: position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    // Attribute: normal
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),  (void*) (3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
 
-    this->VAO = VAO;
     this->shader.compile("shaders/cuboid.vs", "shaders/cuboid.fs");
 }
 
@@ -105,10 +143,8 @@ void CuboidRenderer::draw(const glm::vec3& color, const glm::vec3& translate, co
     this->shader.setMat4("model", model);
 
     // Draw cuboid
-    glBindVertexArray(this->VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Unbind
+    glBindVertexArray(this->vao);
+    glDrawArrays(GL_TRIANGLES, 0, CUBOID_VERTICES_COUNT);
     glBindVertexArray(0);
 }
 
@@ -124,4 +160,26 @@ void CuboidRenderer::setDirectionLight(const glm::vec3& direction_to_light)
 {
     this->shader.use();
     this->shader.setVector("direction_to_light", direction_to_light);
+}
+
+
+void CuboidRenderer::update_instances(const glm::vec3* color, const glm::vec3* translate, const glm::vec3* scale, int size)
+{   
+    glBindVertexArray(this->vao);
+    upload_to_buffer(color_vbo, sizeof(glm::vec3) * size, &color[0]);
+    upload_to_buffer(translate_vbo, sizeof(glm::vec3) * size, &translate[0]);
+    upload_to_buffer(scale_vbo, sizeof(glm::vec3) * size, &scale[0]);
+    glBindVertexArray(0);
+
+    this->instances = size;
+}
+
+
+void CuboidRenderer::draw_instances()
+{
+    this->shader.use();
+
+    glBindVertexArray(this->vao);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, CUBOID_VERTICES_COUNT, this->instances);
+    glBindVertexArray(0);
 }

@@ -12,9 +12,16 @@ public:
     void setDirectionLight(const glm::vec3& direction_to_light);
     void draw(const glm::vec3& color, const glm::vec3& translate, const glm::vec3& scale);
 
+    void update_instances(const glm::vec3* color, const glm::vec3* translate, const glm::vec3* scale, int size);
+    void draw_instances();
+
 private:
-    unsigned int VAO;
     Shader shader;
+    unsigned int vao;
+    int instances;
+    unsigned int color_vbo;
+    unsigned int translate_vbo;
+    unsigned int scale_vbo;
 
     void init();
 };
