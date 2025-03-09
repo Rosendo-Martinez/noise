@@ -403,3 +403,34 @@ Fuck! I'm going to take a quick break.
 DONE: spinning diffuse cuboid.
 
 I'm done, I mean I still need to do a thing or too, but I'm done with the major shit [Mar 8, 855pm]. Tool ~5 days.
+
+
+I'm going to set the instance VBO once. Then I just need to make one call to cuboidRenderer.draw_all_intances()
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Starting work very early (1216pm). What do to? Need to clean up project. Fuck! I need to figure something out for the 2d vs 3d. I think I will just 
+add some input (m key for mode) that lets user switch between 2d and 3d mode. I would also like to give user control about what noise they are seeing,
+value vs graidnet, regular vs octaev. I also want to let use control the frequcinces and amplitued and number of octavaes.
+
+What about the 2d visualizer? I could break it up into two projects...IDK. Feel like I don't want to do that. What if I let user have print button. 
+Also, I compeletly forgot about adding text. Text would make the project look much better, like image text telling you what your looking at "2D value noise using 
+bi-cubic interpolation". <--- very cool. 
+
+To Do:
+- [] Clean up / Refactor
+- [] Feature: switch between 2d and 1d noise
+- [] Feature: switch between value & gradient noise
+- [] Feature: switch between interpolation schemes
+- [] Feature: let user control w/ input number of octaves, frequencies, and amplitude
+- [] Feature: let use control camera: revolution radius, up down height, pause spin
+- [] Feature: let user control image pixels, and sample interval
+- [] Text that says whats going on
+- [] Feature: that lets user print out image
+
+I think after doing all this I will be very happy. I have some other shit to do today, sigh. If I want to get this done today I will have to work extra hard!
+But, I always have tomorrow.
+
+The STRIDE is number of bytes to get from one attribute to another attribute of the same time. ONLY needed when attributes are interleaved in 1 buffer.

@@ -73,11 +73,12 @@ bool init()
     direction_to_light = glm::normalize(glm::vec3(2.0f, 4.0f, 1.0f));
 
     // Fill height_map with data
-    height_map_width = 60;
-    height_map_height = 60;
+    
+    height_map_width = 400;
+    height_map_height = 400;
     height_map = new Image_Grayscale(height_map_width, height_map_height);
-    int SAMPLE_INTERVAL_WIDTH = 6;
-    int SAMPLE_INTERVAL_HEIGHT = 6;
+    int SAMPLE_INTERVAL_WIDTH = 20;
+    int SAMPLE_INTERVAL_HEIGHT = 20;
     float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) height_map_width);
     float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) height_map_height);
     float pixel_00_x = dx * 0.5f;
@@ -94,6 +95,36 @@ bool init()
         }
     }
     height_map->normalize();
+
+    // Set up instances
+
+    int instances = height_map_width * height_map_height;
+    glm::vec3* color_array = new glm::vec3[instances];
+    glm::vec3* translate_array = new glm::vec3[instances];
+    glm::vec3* scale_array = new glm::vec3[instances];
+
+    float cuboid_width_x = 0.1f;
+    float cuboid_length_z = 0.1f;
+    float cuboid_height_scaling = 2.0f;
+    float cuboid00_x = cuboid_width_x * 0.5f - (cuboid_width_x * height_map_width * 0.5f);
+    float cuboid00_z = cuboid_length_z * 0.5f - (cuboid_length_z * height_map_height * 0.5f);
+
+    int i = 0;
+    for (int z = 0; z < height_map_height; z++)
+    {
+        for (int x = 0; x < height_map_width; x++)
+        {
+            color_array[i] = glm::vec3(1.0f);
+            translate_array[i] = glm::vec3(cuboid00_x + cuboid_width_x * x, 0.0f, cuboid00_z + cuboid_length_z * z);
+            scale_array[i] = glm::vec3(cuboid_width_x, (height_map->getPixel(x,z) + 0.1) * cuboid_height_scaling, cuboid_length_z);
+            i++;
+        }
+    }
+
+    cuboid->update_instances(color_array, translate_array, scale_array, instances);
+    delete[] color_array;
+    delete[] translate_array;
+    delete[] scale_array;
 
     return true;
 }
@@ -206,25 +237,7 @@ void render3D()
 
     cuboid->setProjectionView(cam_pers->get_projection_view_matrix());
     cuboid->setDirectionLight(direction_to_light);
-
-    float cuboid_width_x = 0.1f;
-    float cuboid_length_z = 0.1f;
-    float cuboid_height_scaling = 1.0f;
-
-    float cuboid00_x = cuboid_width_x * 0.5f - (cuboid_width_x * height_map_width * 0.5f);
-    float cuboid00_z = cuboid_length_z * 0.5f - (cuboid_length_z * height_map_height * 0.5f);
-
-    for (int z = 0; z < height_map_height; z++)
-    {
-        for (int x = 0; x < height_map_width; x++)
-        {
-            cuboid->draw(
-                glm::vec3(1.0f), 
-                glm::vec3(cuboid00_x + cuboid_width_x * x, 0.0f, cuboid00_z + cuboid_length_z * z), 
-                glm::vec3(cuboid_width_x, (height_map->getPixel(x,z) + 0.1) * cuboid_height_scaling, cuboid_length_z)
-            );
-        }
-    }
+    cuboid->draw_instances();
 
     window->swapBuffers();
 }
@@ -250,8 +263,8 @@ void input()
 
 void update()
 {
-    cam_pos.z = cos(glfwGetTime() / 2.0f) * 5.0f;
-    cam_pos.x = sin(glfwGetTime() / 2.0f) * 5.0f;
-    cam_pos.y = sin(glfwGetTime() / 2.0f) * 1.5f + 2.0f;
+    cam_pos.z = cos(glfwGetTime() / 2.0f) * 6.0f;
+    cam_pos.x = sin(glfwGetTime() / 2.0f) * 6.0f;
+    cam_pos.y = sin(glfwGetTime() / 2.0f) * 2.0f + 4.0f;
     cam_pers->move(cam_pos);
 }
