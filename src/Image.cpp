@@ -238,6 +238,12 @@ void Image_Grayscale::print()
 }
 
 
+float Image_Grayscale::getPixel(int x, int y)
+{
+    return image[y][x];
+}
+
+
 // Main ---------------------------------------------------------------------------------------------------------------
 
 

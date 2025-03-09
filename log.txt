@@ -1,3 +1,5 @@
+[Mar 4]
+
 What the fuck am I doing?
 
 What am I making? A noise visualizer. I will visualize my noise, and also perlin noise.
@@ -383,10 +385,10 @@ then I will render a bunch of cuboids, where the size of the cuboid is equal to 
 shit is somehting else!
 
 TODO: 
-- Perspective Camera
-- Shading
-- 3D visualization of noise w/ cuboids
-- Instancing
+- [DONE] Perspective Camera
+- [DONE] Shading
+- [DONE] 3D visualization of noise w/ cuboids
+- [] Instancing
 
 WOW, writing this shit out, is great! Do it more!
 
@@ -397,3 +399,7 @@ Big problem! I forgot about the projeciotn matrix! Projection matrix != view mat
 
 Their you go. I got a spinning cube! That shit was too hard. Too painful. I compeletly forgot, was it the perpserive or view matrix, IDK it was one of them.
 Fuck! I'm going to take a quick break. 
+
+DONE: spinning diffuse cuboid.
+
+I'm done, I mean I still need to do a thing or too, but I'm done with the major shit [Mar 8, 855pm]. Tool ~5 days.

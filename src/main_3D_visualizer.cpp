@@ -5,6 +5,7 @@
 #include "Noise.h"
 #include "SquareRenderer.h"
 #include "CuboidRenderer.h"
+#include "Image.h"
 #include <cmath>
 
 const float CLEAR_COLOR[4] = {0.6, 0.0, 0.1, 0.0};
@@ -22,6 +23,10 @@ SquareRenderer* square = nullptr;
 CuboidRenderer* cuboid = nullptr;
 CameraOrthographic* cam_ortho = nullptr;
 CameraPerspective* cam_pers = nullptr;
+
+Image_Grayscale* height_map = nullptr;
+int height_map_width;
+int height_map_height;
 
 bool init();
 void render();
@@ -66,6 +71,29 @@ bool init()
     cam_pers = new CameraPerspective(cam_pos, glm::vec3(0.0f, 0.5f, 0.0f), glm::radians(45.0f), window_width, window_height);
 
     direction_to_light = glm::normalize(glm::vec3(2.0f, 4.0f, 1.0f));
+
+    // Fill height_map with data
+    height_map_width = 60;
+    height_map_height = 60;
+    height_map = new Image_Grayscale(height_map_width, height_map_height);
+    int SAMPLE_INTERVAL_WIDTH = 6;
+    int SAMPLE_INTERVAL_HEIGHT = 6;
+    float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) height_map_width);
+    float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) height_map_height);
+    float pixel_00_x = dx * 0.5f;
+    float pixel_00_y = dy * 0.5f;
+
+    for (int y = 0; y < height_map_height; y++)
+    {
+        for (int x = 0; x < height_map_width; x++)
+        {
+            float pixel_x = pixel_00_x + (x * dx);
+            float pixel_y = pixel_00_y + (y * dy);
+
+            height_map->setPixel(x, y, Noise2D::sample_value_bilinear(pixel_x, pixel_y));
+        }
+    }
+    height_map->normalize();
 
     return true;
 }
@@ -178,7 +206,25 @@ void render3D()
 
     cuboid->setProjectionView(cam_pers->get_projection_view_matrix());
     cuboid->setDirectionLight(direction_to_light);
-    cuboid->draw(glm::vec3(0.0f, 0.7f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+
+    float cuboid_width_x = 0.1f;
+    float cuboid_length_z = 0.1f;
+    float cuboid_height_scaling = 1.0f;
+
+    float cuboid00_x = cuboid_width_x * 0.5f - (cuboid_width_x * height_map_width * 0.5f);
+    float cuboid00_z = cuboid_length_z * 0.5f - (cuboid_length_z * height_map_height * 0.5f);
+
+    for (int z = 0; z < height_map_height; z++)
+    {
+        for (int x = 0; x < height_map_width; x++)
+        {
+            cuboid->draw(
+                glm::vec3(1.0f), 
+                glm::vec3(cuboid00_x + cuboid_width_x * x, 0.0f, cuboid00_z + cuboid_length_z * z), 
+                glm::vec3(cuboid_width_x, (height_map->getPixel(x,z) + 0.1) * cuboid_height_scaling, cuboid_length_z)
+            );
+        }
+    }
 
     window->swapBuffers();
 }
@@ -204,8 +250,8 @@ void input()
 
 void update()
 {
-    cam_pos.z = cos(glfwGetTime() / 4.0f) * 3.0f;
-    cam_pos.x = sin(glfwGetTime() / 4.0f) * 3.0f;
-    cam_pos.y = sin(glfwGetTime() / 4.0f) * 2.5f;
+    cam_pos.z = cos(glfwGetTime() / 2.0f) * 5.0f;
+    cam_pos.x = sin(glfwGetTime() / 2.0f) * 5.0f;
+    cam_pos.y = sin(glfwGetTime() / 2.0f) * 1.5f + 2.0f;
     cam_pers->move(cam_pos);
 }
