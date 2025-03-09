@@ -14,6 +14,8 @@ int window_height = 800;
 
 glm::vec3 cam_pos (0.0f);
 
+glm::vec3 direction_to_light;
+
 Window* window = nullptr;
 LineRenderer* line = nullptr;
 SquareRenderer* square = nullptr;
@@ -63,6 +65,7 @@ bool init()
     cam_ortho = new CameraOrthographic(-2.0f, 22.0f, -2.0f, 2.0f, -1.0f, 1.0f);
     cam_pers = new CameraPerspective(cam_pos, glm::vec3(0.0f, 0.5f, 0.0f), glm::radians(45.0f), window_width, window_height);
 
+    direction_to_light = glm::normalize(glm::vec3(2.0f, 4.0f, 1.0f));
 
     return true;
 }
@@ -169,14 +172,17 @@ void render2D()
 
 void render3D()
 {
+    glEnable(GL_DEPTH_TEST);
     glClearColor(CLEAR_COLOR[0], CLEAR_COLOR[1], CLEAR_COLOR[2], CLEAR_COLOR[3]);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     cuboid->setProjectionView(cam_pers->get_projection_view_matrix());
+    cuboid->setDirectionLight(direction_to_light);
     cuboid->draw(glm::vec3(0.0f, 0.7f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
 
     window->swapBuffers();
 }
+
 
 void render()
 {

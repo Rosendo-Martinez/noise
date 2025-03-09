@@ -9,6 +9,7 @@ public:
     CuboidRenderer();
 
     void setProjectionView(const glm::mat4& projection_view);
+    void setDirectionLight(const glm::vec3& direction_to_light);
     void draw(const glm::vec3& color, const glm::vec3& translate, const glm::vec3& scale);
 
 private:

@@ -118,3 +118,10 @@ void CuboidRenderer::setProjectionView(const glm::mat4& projection_view)
     this->shader.use();
     this->shader.setMat4("projection_view", projection_view);
 }
+
+
+void CuboidRenderer::setDirectionLight(const glm::vec3& direction_to_light)
+{
+    this->shader.use();
+    this->shader.setVector("direction_to_light", direction_to_light);
+}
