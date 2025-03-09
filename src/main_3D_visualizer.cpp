@@ -73,12 +73,12 @@ bool init()
     direction_to_light = glm::normalize(glm::vec3(2.0f, 4.0f, 1.0f));
 
     // Fill height_map with data
-    
-    height_map_width = 400;
-    height_map_height = 400;
+
+    height_map_width = 200;
+    height_map_height = 200;
     height_map = new Image_Grayscale(height_map_width, height_map_height);
-    int SAMPLE_INTERVAL_WIDTH = 20;
-    int SAMPLE_INTERVAL_HEIGHT = 20;
+    int SAMPLE_INTERVAL_WIDTH = 10;
+    int SAMPLE_INTERVAL_HEIGHT = 10;
     float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) height_map_width);
     float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) height_map_height);
     float pixel_00_x = dx * 0.5f;
@@ -263,8 +263,8 @@ void input()
 
 void update()
 {
-    cam_pos.z = cos(glfwGetTime() / 2.0f) * 6.0f;
-    cam_pos.x = sin(glfwGetTime() / 2.0f) * 6.0f;
-    cam_pos.y = sin(glfwGetTime() / 2.0f) * 2.0f + 4.0f;
+    cam_pos.z = cos(glfwGetTime() / 2.0f) * 7.0f;
+    cam_pos.x = sin(glfwGetTime() / 2.0f) * 7.0f;
+    cam_pos.y = sin(glfwGetTime() / 2.0f) * 2.0f + 5.0f;
     cam_pers->move(cam_pos);
 }
