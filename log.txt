@@ -347,5 +347,53 @@ TO CHECK: make sure random genreators return SAME VALUES!
 Anyways, what the fuck am I doing?
 
 TO DO:
-- Octave
+- [DONE] Octave
 - 3d visualizer
+
+TODO: remove bi- from names? 
+
+What else to do? Just finished 2D octave ~33m (very quickly). I guess its 3d visualization. Fuck, I'm a bit scared of this one!
+My idea is to either visualize it using a 3D mesh made of traingles or use cuboids, where the height of hte cuboid is equal to the nosie value.
+I'm a bit scared since I feel like this requires more knowldge of real-world 3d graphics then what I have. WELL, only one way to find out! 
+
+How about this... Well first, on that shit of know doing it 'right' or not knowing how 'to do it', thats fine. Thats an ok feeling, but the only
+way to get over this feeling is to do the actual fucking work, see what fucking happens! Simple as.
+
+Here what I'm thinking: I have two visualing modes: 1) uses cuboid, 2) uses a triangulated mesh
+The cuboids should be easier. I also think I'd like for it to move with respect to the camera, like I don't think I'd like it for it to just be sitting 
+their, ateast spin or have the camera spin, BUT I can do this last. Also, I'm thinking having a framerate tracker might be a good idea, that way 
+I know exactly if I'm fucking up (~60 fps is good, <20 fps is bad!).
+
+Ok, so instancing is the way your SUPPOSED to render on the GPU. First I'll render 1 cube at 
+a time, then I'll switch to instances.
+
+TEST: instance vs 1 draw call per cube!
+
+I fucking hate making the vertex for a cuboid VBO!!! I FUCKING HATE IT!!!
+
+IDEA: add a Buffer class that create VBO/EBOs.
+
+
+Alright, I think its working. I got the cube rendering, god that shit was hard, painful. I swear math is easier then this openGL 3d graphics shit, IDK.
+Anyways, what now? I have something rendering that looks like its a cuboid (although all I can see is a square). It most likly works. But I feel like I need
+some better way to test it. Also, I think I should add some shading, becaues else its will be very hard to see the diffenrt faces of the cube. 
+Also, I'm thikning to switching to a Perpsective camera. I was thiking of flying the camera around in cirlces around the cuboid just to make sure it is a cuboid.
+Feel like shit after that cuboid rendering opengl shit. What the FUCK am I doing? The plan is, again, to render the noise in 3D. I'll use the noise as a height map
+then I will render a bunch of cuboids, where the size of the cuboid is equal to the noise value that it corrsepodns to. It really shoudn't be so hard, yet this 
+shit is somehting else!
+
+TODO: 
+- Perspective Camera
+- Shading
+- 3D visualization of noise w/ cuboids
+- Instancing
+
+WOW, writing this shit out, is great! Do it more!
+
+v_ndc = projection * view * world * view * v;
+Then do perpsective diviosn & culling. 
+
+Big problem! I forgot about the projeciotn matrix! Projection matrix != view matrix. 
+
+Their you go. I got a spinning cube! That shit was too hard. Too painful. I compeletly forgot, was it the perpserive or view matrix, IDK it was one of them.
+Fuck! I'm going to take a quick break. 
