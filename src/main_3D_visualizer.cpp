@@ -33,6 +33,11 @@ enum class Mode
     render3D, render2D
 } mode;
 
+enum class Noise_Type
+{
+    value_linear, value_cubic, perlin_hermite
+} noise_type;
+
 
 bool init();
 void render();
@@ -60,6 +65,10 @@ int main()
 
 
 // Helper functions: -----------------------------------------------------------------------
+
+
+float get_noise(float x);
+float get_noise_octave(float x);
 
 
 bool init()
@@ -189,15 +198,15 @@ void render2D()
         {
             line->draw(
                 LINE_COLOR,
-                glm::vec3(x, Noise1D::sample_value_octave_linear(x), 0.0f),
-                glm::vec3(x + dx, Noise1D::sample_value_octave_linear(x + dx), 0.0f),
+                glm::vec3(x, get_noise_octave(x), 0.0f),
+                glm::vec3(x + dx, get_noise_octave(x + dx), 0.0f),
                 LINE_WIDTH + 1.25
             );
 
             line->draw(
                 glm::vec3(0.0, 1.0, 0.0),
-                glm::vec3(x, Noise1D::sample_value_linear(x), 0.0f),
-                glm::vec3(x + dx, Noise1D::sample_value_linear(x + dx), 0.0f),
+                glm::vec3(x, get_noise(x), 0.0f),
+                glm::vec3(x + dx, get_noise(x + dx), 0.0f),
                 LINE_WIDTH + 2.5f
             );
 
@@ -278,6 +287,24 @@ void input()
         mode = mode == Mode::render2D ? Mode::render3D : Mode::render2D;
         keys[GLFW_KEY_M].duplicate = true;
     }
+
+    if (keys[GLFW_KEY_SPACE].is_pressed && !keys[GLFW_KEY_SPACE].duplicate)
+    {
+        if (noise_type == Noise_Type::value_linear)
+        {
+            noise_type = Noise_Type::value_cubic;
+        }
+        else if (noise_type == Noise_Type::value_cubic)
+        {
+            noise_type = Noise_Type::perlin_hermite;
+        }
+        else
+        {
+            noise_type = Noise_Type::value_linear;
+        }
+
+        keys[GLFW_KEY_SPACE].duplicate = true;
+    }
 }
 
 
@@ -292,5 +319,42 @@ void update()
         cam_pos.x = sin(glfwGetTime() / 2.0f) * 7.0f;
         cam_pos.y = sin(glfwGetTime() / 2.0f) * 2.0f + 5.0f;
         cam_pers->move(cam_pos);
+    }
+}
+
+
+// Helper functions ---------------------------------------------------------------
+
+
+float get_noise(float x)
+{
+    if (noise_type == Noise_Type::value_linear)
+    {
+        return Noise1D::sample_value_linear(x);
+    }
+    else if (noise_type == Noise_Type::value_cubic)
+    {
+        return Noise1D::sample_value_cubic(x);
+    }
+    else
+    {
+        return Noise1D::sample_perlin_hermite(x);
+    }
+}
+
+
+float get_noise_octave(float x)
+{
+    if (noise_type == Noise_Type::value_linear)
+    {
+        return Noise1D::sample_value_octave_linear(x);
+    }
+    else if (noise_type == Noise_Type::value_cubic)
+    {
+        return Noise1D::sample_value_octave_cubic(x);
+    }
+    else
+    {
+        return Noise1D::sample_perlin_octave_hermite(x);
     }
 }

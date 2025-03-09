@@ -421,7 +421,7 @@ bi-cubic interpolation". <--- very cool.
 
 To Do:
 - [DONE] Clean up / Refactor
-- [] Feature: switch between 2d and 1d noise
+- [DONE] Feature: switch between 2d and 1d noise
 - [] Feature: switch between value & gradient noise
 - [] Feature: switch between interpolation schemes
 - [] Feature: let user control w/ input number of octaves, frequencies, and amplitude
@@ -445,10 +445,15 @@ query(key)
 
 What input do I want, how am I going to use it? Well, mostly just to check what key is pressed. I will also likely only need to check 1 per key pesss, so no duplication.
 
-I'm copyying JDAH.
+I'm copyying JDAH. He stole from some guy, I stole from him, were all stealing!
 
 Keys keys[];
 
 Key { isPressed, duplicate }
 
 isPressed tells you if the key is currntlty being pressed, duplicate tells you if is a duplicate (i.e being held down)!
+
+
+Debug keys IDEAS:
+- KEY_? : for wireframe toggle
+- KEY_? : for printing state 
