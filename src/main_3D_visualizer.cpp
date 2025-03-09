@@ -37,6 +37,7 @@ enum class Noise_Type
 {
     value_linear, value_cubic, perlin_hermite
 } noise_type;
+bool use_octave = false;
 
 
 bool init();
@@ -230,9 +231,6 @@ void input()
 {
     window->pollEvents();
 
-    // No logic, just getting user input.
-    // update() does calculations and logic.
-
     if (keys[GLFW_KEY_M].is_pressed && !keys[GLFW_KEY_M].duplicate)
     {
         mode = mode == Mode::render2D ? Mode::render3D : Mode::render2D;
@@ -261,6 +259,18 @@ void input()
         }
 
         keys[GLFW_KEY_SPACE].duplicate = true;
+    }
+
+    if (keys[GLFW_KEY_N].is_pressed && !keys[GLFW_KEY_N].duplicate)
+    {
+        keys[GLFW_KEY_N].duplicate = true;
+
+        if (mode == Mode::render3D)
+        {
+            use_octave = !use_octave;
+            construct_height_map();
+            construct_instances();
+        }
     }
 }
 
@@ -319,9 +329,7 @@ float get_noise_octave(float x)
 
 float get_noise(float x, float y)
 {
-    bool is_octave_noise = false; // TODO: make global, and toggle-able by user input
-
-    if (is_octave_noise)
+    if (use_octave)
     {
         if (noise_type == Noise_Type::value_linear)
         {
