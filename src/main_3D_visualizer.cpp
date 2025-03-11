@@ -47,12 +47,12 @@ int current_frequency = 2;
 
 
 const int height_map_dimensions_count = 5;
-const int height_map_dimensions[height_map_dimensions_count] = { 100, 200, 300, 400, 500 };
+const int height_map_dimensions[height_map_dimensions_count] = { 100, 200, 300, 400, 450 };
 int current_height_map_dimension_index = 0;
 
 const int noise_sample_interval_count = 7;
 const int noise_sample_interval[noise_sample_interval_count] = { 1, 2, 4, 8, 16, 32, 64 };
-int current_noise_sample_interval_index = 0;
+int current_noise_sample_interval_index = 3;
 
 bool init();
 void render();
