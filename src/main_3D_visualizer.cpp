@@ -333,6 +333,14 @@ void input()
         keys[GLFW_KEY_Z].duplicate = true;
     }
 
+    if (keys[GLFW_KEY_O].is_pressed && !keys[GLFW_KEY_O].duplicate)
+    {
+        if (height_map != nullptr)
+        {
+            height_map->save("noise.bmp");
+        }
+    }
+
     if (changed_noise_state && mode == Mode::render3D)
     {
         construct_height_map();
