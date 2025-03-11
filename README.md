@@ -4,7 +4,7 @@ A project I made to visualize coherent noise.
 
 ## Video Demo 
 
-VIDEO DEMO HERE
+https://github.com/user-attachments/assets/efcc69e8-0151-4d4f-8d88-d50963a1f2de
 
 ## Rendered Pictures
 
