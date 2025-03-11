@@ -25,8 +25,6 @@ CameraOrthographic* cam_ortho = nullptr;
 CameraPerspective* cam_pers = nullptr;
 
 Image_Grayscale* height_map = nullptr;
-int height_map_width;
-int height_map_height;
 
 enum class Mode
 {
@@ -47,6 +45,10 @@ int current_octaves = 6;
 const int max_frequency = 8;
 int current_frequency = 2;
 
+
+const int height_map_dimensions_count = 4;
+const int height_map_dimensions[height_map_dimensions_count] = { 100, 200, 300, 400 };
+int current_height_map_dimension_index = 0;
 
 bool init();
 void render();
@@ -313,6 +315,13 @@ void input()
         keys[GLFW_KEY_P].duplicate = true;
     }
 
+    if (keys[GLFW_KEY_X].is_pressed && !keys[GLFW_KEY_X].duplicate)
+    {
+        current_height_map_dimension_index = (current_height_map_dimension_index + 1) % height_map_dimensions_count;
+        changed_noise_state = true;
+        keys[GLFW_KEY_X].duplicate = true;
+    }
+
     if (changed_noise_state && mode == Mode::render3D)
     {
         construct_height_map();
@@ -415,8 +424,8 @@ void construct_height_map()
         delete height_map;
     }
 
-    height_map_width = 200;
-    height_map_height = 200;
+    int height_map_width = height_map_dimensions[current_height_map_dimension_index];
+    int height_map_height = height_map_dimensions[current_height_map_dimension_index];
     height_map = new Image_Grayscale(height_map_width, height_map_height);
     int SAMPLE_INTERVAL_WIDTH = 10;
     int SAMPLE_INTERVAL_HEIGHT = 10;
@@ -441,6 +450,9 @@ void construct_height_map()
 
 void construct_instances()
 {
+    int height_map_width = height_map_dimensions[current_height_map_dimension_index];
+    int height_map_height = height_map_dimensions[current_height_map_dimension_index];
+
     int instances = height_map_width * height_map_height;
     glm::vec3* color_array = new glm::vec3[instances];
     glm::vec3* translate_array = new glm::vec3[instances];
@@ -479,4 +491,5 @@ void print_state()
     std::cout << "Frequency   (B): " << current_frequency << '\n';
     std::cout << "Octaves     (V): " << current_octaves << '\n';
     std::cout << "Persistence (C): " << persistence_values[current_persistence_index] << '\n';
+    std::cout << "Sample Dim. (X): " << height_map_dimensions[current_height_map_dimension_index] << 'x' << height_map_dimensions[current_height_map_dimension_index] << " \n";
 }
