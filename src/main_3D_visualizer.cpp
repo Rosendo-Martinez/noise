@@ -39,12 +39,12 @@ enum class Noise_Type
 } noise_type;
 bool use_octave = false;
 
-const int persistence_values_count = 5;
-const float persistence_values[persistence_values_count] = { 1.0f, (1.0f/sqrt(2.0)), 0.5f, 0.25f, 0.12f };
+const int persistence_values_count = 6;
+const float persistence_values[persistence_values_count] = { 1.0f, (1.0f/sqrt(2.0)), 0.5f, 0.25f, 0.12f, 0.06f };
 int current_persistence_index = 0;
 const int max_octaves = 10;
 int current_octaves = 6;
-const int max_frequency = 5;
+const int max_frequency = 8;
 int current_frequency = 2;
 
 
@@ -473,10 +473,10 @@ void construct_instances()
 
 void print_state()
 {
-    std::cout << "Mode: " << (mode == Mode::render2D ? "2D" : "3D") << '\n';
-    std::cout << "Noise: " << (noise_type == Noise_Type::value_linear ? "Value Linear" : noise_type == Noise_Type::value_cubic ? "Value Cubic" : "Perlin Hermite") << '\n';
-    std::cout << "Octave: " << (use_octave ? "ON" : "OFF") << '\n';
-    std::cout << "  frequency: " << current_frequency << '\n';
-    std::cout << "  octaves: " << current_octaves << '\n';
-    std::cout << "  persistence: " << persistence_values[current_persistence_index] << '\n';
+    std::cout << "Mode        (M): " << (mode == Mode::render2D ? "2D" : "3D") << '\n';
+    std::cout << "Noise   (Space): " << (noise_type == Noise_Type::value_linear ? "Value Linear" : noise_type == Noise_Type::value_cubic ? "Value Cubic" : "Perlin Hermite") << '\n';
+    std::cout << "Octave      (N): " << (use_octave ? "ON" : "OFF") << '\n';
+    std::cout << "Frequency   (B): " << current_frequency << '\n';
+    std::cout << "Octaves     (V): " << current_octaves << '\n';
+    std::cout << "Persistence (C): " << persistence_values[current_persistence_index] << '\n';
 }
