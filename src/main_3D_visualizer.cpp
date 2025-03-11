@@ -458,11 +458,14 @@ void construct_instances()
     glm::vec3* translate_array = new glm::vec3[instances];
     glm::vec3* scale_array = new glm::vec3[instances];
 
-    float cuboid_width_x = 0.1f;
-    float cuboid_length_z = 0.1f;
+    float map_width_x = 40;
+    float map_length_z = 40;
+
+    float cuboid_width_x = map_width_x / ((float) height_map_width);
+    float cuboid_length_z = map_length_z / ((float) height_map_height);
     float cuboid_height_scaling = 2.0f;
-    float cuboid00_x = cuboid_width_x * 0.5f - (cuboid_width_x * height_map_width * 0.5f);
-    float cuboid00_z = cuboid_length_z * 0.5f - (cuboid_length_z * height_map_height * 0.5f);
+    float cuboid00_x = cuboid_width_x * 0.5f - (map_width_x * 0.5f);
+    float cuboid00_z = cuboid_length_z * 0.5f - (map_length_z * 0.5f);
 
     int i = 0;
     for (int z = 0; z < height_map_height; z++)
