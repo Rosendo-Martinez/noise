@@ -46,9 +46,13 @@ const int max_frequency = 8;
 int current_frequency = 2;
 
 
-const int height_map_dimensions_count = 4;
-const int height_map_dimensions[height_map_dimensions_count] = { 100, 200, 300, 400 };
+const int height_map_dimensions_count = 5;
+const int height_map_dimensions[height_map_dimensions_count] = { 100, 200, 300, 400, 500 };
 int current_height_map_dimension_index = 0;
+
+const int noise_sample_interval_count = 7;
+const int noise_sample_interval[noise_sample_interval_count] = { 1, 2, 4, 8, 16, 32, 64 };
+int current_noise_sample_interval_index = 0;
 
 bool init();
 void render();
@@ -322,6 +326,13 @@ void input()
         keys[GLFW_KEY_X].duplicate = true;
     }
 
+    if (keys[GLFW_KEY_Z].is_pressed && !keys[GLFW_KEY_Z].duplicate)
+    {
+        current_noise_sample_interval_index = (current_noise_sample_interval_index + 1) % noise_sample_interval_count; 
+        changed_noise_state = true;
+        keys[GLFW_KEY_Z].duplicate = true;
+    }
+
     if (changed_noise_state && mode == Mode::render3D)
     {
         construct_height_map();
@@ -427,8 +438,8 @@ void construct_height_map()
     int height_map_width = height_map_dimensions[current_height_map_dimension_index];
     int height_map_height = height_map_dimensions[current_height_map_dimension_index];
     height_map = new Image_Grayscale(height_map_width, height_map_height);
-    int SAMPLE_INTERVAL_WIDTH = 10;
-    int SAMPLE_INTERVAL_HEIGHT = 10;
+    int SAMPLE_INTERVAL_WIDTH = noise_sample_interval[current_noise_sample_interval_index];
+    int SAMPLE_INTERVAL_HEIGHT = noise_sample_interval[current_noise_sample_interval_index];
     float dx = ((float) SAMPLE_INTERVAL_WIDTH) / ((float) height_map_width);
     float dy = ((float) SAMPLE_INTERVAL_HEIGHT) / ((float) height_map_height);
     float pixel_00_x = dx * 0.5f;
@@ -495,4 +506,5 @@ void print_state()
     std::cout << "Octaves     (V): " << current_octaves << '\n';
     std::cout << "Persistence (C): " << persistence_values[current_persistence_index] << '\n';
     std::cout << "Sample Dim. (X): " << height_map_dimensions[current_height_map_dimension_index] << 'x' << height_map_dimensions[current_height_map_dimension_index] << " \n";
+    std::cout << "Noise Dim.  (Z): " << noise_sample_interval[current_noise_sample_interval_index] << 'x' << noise_sample_interval[current_noise_sample_interval_index] << " \n";
 }
