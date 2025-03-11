@@ -39,6 +39,14 @@ enum class Noise_Type
 } noise_type;
 bool use_octave = false;
 
+const int persistence_values_count = 5;
+const float persistence_values[persistence_values_count] = { 1.0f, (1.0f/sqrt(2.0)), 0.5f, 0.25f, 0.12f };
+int current_persistence_index = 0;
+const int max_octaves = 10;
+int current_octaves = 6;
+const int max_frequency = 5;
+int current_frequency = 2;
+
 
 bool init();
 void render();
@@ -72,6 +80,7 @@ float get_noise(float x);
 float get_noise_octave(float x);
 void construct_height_map();
 void construct_instances();
+void print_state();
 
 
 bool init()
@@ -231,6 +240,8 @@ void input()
 {
     window->pollEvents();
 
+    bool changed_noise_state = false;
+
     if (keys[GLFW_KEY_M].is_pressed && !keys[GLFW_KEY_M].duplicate)
     {
         mode = mode == Mode::render2D ? Mode::render3D : Mode::render2D;
@@ -252,25 +263,60 @@ void input()
             noise_type = Noise_Type::value_linear;
         }
 
-        if (mode == Mode::render3D)
-        {
-            construct_height_map();
-            construct_instances();
-        }
-
+        changed_noise_state = true;
         keys[GLFW_KEY_SPACE].duplicate = true;
     }
 
     if (keys[GLFW_KEY_N].is_pressed && !keys[GLFW_KEY_N].duplicate)
     {
+        use_octave = !use_octave;
+        changed_noise_state = true;
         keys[GLFW_KEY_N].duplicate = true;
+    }
 
-        if (mode == Mode::render3D)
+    if (keys[GLFW_KEY_C].is_pressed && !keys[GLFW_KEY_C].duplicate)
+    {
+        current_persistence_index = (current_persistence_index + 1) % persistence_values_count;
+        change_octave_state(current_octaves, current_frequency, persistence_values[current_persistence_index]);
+        changed_noise_state = true;
+        keys[GLFW_KEY_C].duplicate = true;
+    }
+
+    if (keys[GLFW_KEY_V].is_pressed && !keys[GLFW_KEY_V].duplicate)
+    {
+        current_octaves = (current_octaves + 1) % max_octaves;
+        if (current_octaves == 0)
         {
-            use_octave = !use_octave;
-            construct_height_map();
-            construct_instances();
+            // Can't be zero
+            current_octaves = 1;
         }
+        change_octave_state(current_octaves, current_frequency, persistence_values[current_persistence_index]);
+        changed_noise_state = true;
+        keys[GLFW_KEY_V].duplicate = true;
+    }
+
+    if (keys[GLFW_KEY_B].is_pressed && !keys[GLFW_KEY_B].duplicate)
+    {
+        current_frequency = (current_frequency + 1) % max_frequency;
+        if (current_frequency == 0)
+        {
+            current_frequency = 1;
+        }
+        change_octave_state(current_octaves, current_frequency, persistence_values[current_persistence_index]);
+        changed_noise_state = true;
+        keys[GLFW_KEY_B].duplicate = true;
+    }
+
+    if (keys[GLFW_KEY_P].is_pressed && !keys[GLFW_KEY_P].duplicate)
+    {
+        print_state();
+        keys[GLFW_KEY_P].duplicate = true;
+    }
+
+    if (changed_noise_state && mode == Mode::render3D)
+    {
+        construct_height_map();
+        construct_instances();
     }
 }
 
@@ -422,4 +468,15 @@ void construct_instances()
     delete[] color_array;
     delete[] translate_array;
     delete[] scale_array;
+}
+
+
+void print_state()
+{
+    std::cout << "Mode: " << (mode == Mode::render2D ? "2D" : "3D") << '\n';
+    std::cout << "Noise: " << (noise_type == Noise_Type::value_linear ? "Value Linear" : noise_type == Noise_Type::value_cubic ? "Value Cubic" : "Perlin Hermite") << '\n';
+    std::cout << "Octave: " << (use_octave ? "ON" : "OFF") << '\n';
+    std::cout << "  frequency: " << current_frequency << '\n';
+    std::cout << "  octaves: " << current_octaves << '\n';
+    std::cout << "  persistence: " << persistence_values[current_persistence_index] << '\n';
 }

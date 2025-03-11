@@ -7,6 +7,11 @@
 #define PI 3.14159265
 
 
+unsigned octaves = 6;
+unsigned frequency = 2;
+float persistence = 0.5f;
+
+
 enum class Interpolate
 {
     Linear, Cubic, Hermite
@@ -31,6 +36,16 @@ struct Vector
 
 
 // Helper functions ---------------------------------------------------------------------------------------
+
+
+void change_octave_state(unsigned new_octaves, unsigned new_frequency, float new_persistence)
+{
+    assert(new_frequency != 0);
+
+    octaves = new_octaves;
+    frequency = new_frequency;
+    persistence = new_persistence;
+}
 
 
 void split_float(float x, int& x_int, float& x_dec)
@@ -145,10 +160,6 @@ Cubic get_horizontal_cubic(int x, int y)
 
 float octave(float x, bool isValue, Interpolate interpolate_type)
 {
-    int octaves = 6;
-    int frequency = 2;
-    float amplitude = 0.5f;
-
     float total = 0;
     for (int i = 0; i < octaves; i++)
     {
@@ -156,16 +167,16 @@ float octave(float x, bool isValue, Interpolate interpolate_type)
         {
             if (interpolate_type == Interpolate::Cubic)
             {
-                total += Noise1D::sample_value_cubic(x * pow(frequency, i)) * pow(amplitude, i);
+                total += Noise1D::sample_value_cubic(x * pow(frequency, i)) * pow(persistence, i);
             }
             else
             {
-                total += Noise1D::sample_value_linear(x * pow(frequency, i)) * pow(amplitude, i);
+                total += Noise1D::sample_value_linear(x * pow(frequency, i)) * pow(persistence, i);
             }
         }
         else // perlin / gradient noise
         {
-            total += Noise1D::sample_perlin_hermite(x * pow(frequency, i)) * pow(amplitude, i);
+            total += Noise1D::sample_perlin_hermite(x * pow(frequency, i)) * pow(persistence, i);
         }
     }
 
@@ -175,10 +186,6 @@ float octave(float x, bool isValue, Interpolate interpolate_type)
 
 float octave(float x, float  y, bool isValue, Interpolate interpolate_type)
 {
-    int octaves = 6;
-    int frequency = 2;
-    float amplitude = 0.5f;
-
     float total = 0;
     for (int i = 0; i < octaves; i++)
     {
@@ -186,16 +193,16 @@ float octave(float x, float  y, bool isValue, Interpolate interpolate_type)
         {
             if (interpolate_type == Interpolate::Cubic)
             {
-                total += Noise2D::sample_value_bicubic(x * pow(frequency, i), y * pow(frequency, i)) * pow(amplitude, i);
+                total += Noise2D::sample_value_bicubic(x * pow(frequency, i), y * pow(frequency, i)) * pow(persistence, i);
             }
             else
             {
-                total += Noise2D::sample_value_bilinear(x * pow(frequency, i), y * pow(frequency, i)) * pow(amplitude, i);
+                total += Noise2D::sample_value_bilinear(x * pow(frequency, i), y * pow(frequency, i)) * pow(persistence, i);
             }
         }
         else // perlin / gradient noise
         {
-            total += Noise2D::sample_perlin_hermite(x * pow(frequency, i), y * pow(frequency, i)) * pow(amplitude, i);
+            total += Noise2D::sample_perlin_hermite(x * pow(frequency, i), y * pow(frequency, i)) * pow(persistence, i);
         }
     }
 
